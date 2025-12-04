@@ -1,0 +1,881 @@
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Servicios - ARKONS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1f2937, #4b5563);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gold-accent {
+            color: #d4af37;
+        }
+
+        /* Patrón de puntos sutil para el fondo oscuro */
+        .dot-pattern {
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* ========================================= */
+        /* AJUSTES ESPECÍFICOS PARA PDF         */
+        /* ========================================= */
+        @media print {
+            @page {
+                margin: 0.3cm;
+            }
+
+            body {
+                background-color: white;
+                font-size: 11px;
+            }
+
+            /* Forzar el Grid de 3 columnas en impresión */
+            .grid-cols-1 {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 0.8rem !important;
+            }
+            .md\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+            .md\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            /* Quitar sombras y efectos visuales pesados */
+            .shadow-lg, .shadow-xl, .shadow-sm {
+                box-shadow: none !important;
+                border: 1px solid #d1d5db !important;
+            }
+            .card-hover {
+                transform: none !important;
+            }
+
+            /* Ajustar el header nuevo para impresión */
+            header {
+                padding-bottom: 0 !important;
+                margin-bottom: 0.5rem !important;
+                overflow: visible !important;
+            }
+
+            header .bg-gray-900 {
+                height: 3rem !important;
+                print-color-adjust: exact !important; 
+                -webkit-print-color-adjust: exact !important;
+            }
+            header .dot-pattern {
+                opacity: 0.05 !important;
+            }
+            
+            header .transform-translate {
+                 margin-top: -1.5rem !important;
+                 transform: none !important;
+            }
+            
+            main {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                margin-top: 0 !important;
+            }
+            
+            /* Logo en impresión: Ajustado para que se vea completo */
+            img {
+                height: 8rem !important;
+                width: auto !important;
+                max-width: 100% !important;
+                object-fit: contain !important;
+                margin-bottom: 0 !important;
+                transform: rotate(0deg) !important;
+            }
+            
+            /* Ajustar contenedor del logo en impresión */
+            .relative.bg-white.p-6 {
+                padding: 0.5rem !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            /* Ajustar textos grandes */
+            h1 { font-size: 1.4rem !important; margin-bottom: 0 !important; margin-top: 0.5rem !important; }
+            p.text-xl { font-size: 0.9rem !important; margin-bottom: 0.5rem !important; }
+            h2 { display: none !important; }
+            
+            /* Ajustar tarjetas para ahorrar espacio vertical */
+            .p-8 { padding: 0.8rem !important; }
+            .mt-16 { margin-top: 1rem !important; }
+            
+            /* Footer */
+            footer { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Encabezado con Diseño Mejorado -->
+    <header class="bg-white shadow-sm border-b border-gray-200 relative pb-12">
+        
+        <!-- Franja oscura decorativa -->
+        <div class="h-40 bg-gray-900 w-full relative overflow-hidden flex items-center justify-center">
+            <!-- Patrón de puntos decorativo -->
+            <div class="absolute inset-0 opacity-5 dot-pattern"></div>
+            <!-- Círculo decorativo de fondo -->
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-gray-800 rounded-full opacity-50 blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-gray-800 rounded-full opacity-50 blur-3xl"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center -mt-24 transform-translate">
+            <!-- Contenedor del Logo (Flotante) -->
+            <div class="inline-block relative group">
+                <!-- Efecto de brillo detrás -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 print:hidden"></div>
+                
+                <div class="relative bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
+                    <!-- AQUÍ SE MOSTRARÁ TU LOGO REAL -->
+                    <img src="LOGO 2024.png" alt="ARKONS Arquitectura y Construcción" class="h-64 object-contain mx-auto block">
+                </div>
+            </div>
+            
+            <!-- Títulos estilizados -->
+            <div class="mt-8 print:mt-2">
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight uppercase mb-2">Tabla de Servicios</h1>
+                
+                <div class="flex items-center justify-center gap-4 text-gray-400 print:hidden">
+                    <div class="h-px w-8 bg-gray-300"></div>
+                    <i class="fas fa-drafting-compass text-sm"></i>
+                    <div class="h-px w-8 bg-gray-300"></div>
+                </div>
+
+                <p class="text-xl text-gray-600 font-light mt-2 uppercase tracking-[0.2em]">Anteproyecto Arquitectónico</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal: Paquetes y Formulario -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 print:py-0">
+        
+        <!-- Sección de Paquetes de Precios -->
+        <section class="mb-16">
+            <div class="text-center mb-12 print:hidden">
+                <h2 class="text-2xl font-semibold text-gray-800">Paquetes de Diseño</h2>
+                <p class="text-gray-500 mt-2">Elige la opción ideal para visualizar tu proyecto antes de construir.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 print:gap-4">
+                
+                <!-- PAQUETE BÁSICO -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 card-hover flex flex-col">
+                    <div class="p-8 flex-grow">
+                        <div class="uppercase tracking-wide text-xs font-bold text-gray-400 border-b border-gray-100 pb-2 mb-4">Esencial</div>
+                        <h3 class="text-2xl font-bold text-gray-900">Básico</h3>
+                        <p class="mt-2 text-gray-500 text-sm h-10 print:h-auto print:mb-2">Para fachadas y remodelaciones sencillas.</p>
+                        
+                        <!-- PRECIO PRINCIPAL MXN (BASE) -->
+                        <div class="mt-6 flex flex-col items-start space-y-1">
+                            <div class="flex items-baseline">
+                                <span class="text-4xl font-extrabold text-gray-900">$80</span>
+                                <span class="ml-1 text-xl font-medium text-gray-500">MXN/m²</span>
+                            </div>
+                            <!-- Referencia en USD (Tu cifra fija) -->
+                            <div class="text-gray-500 text-sm font-semibold">
+                                (Ref. $5.00 USD/m²)
+                            </div>
+                        </div>
+                        <!-- FIN PRECIO PRINCIPAL -->
+                        
+                        <!-- Separador -->
+                        <div class="w-full h-px bg-gray-100 my-6 print:my-3"></div>
+                        
+                        <ul class="space-y-4 print:space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Plantas Arquitectónicas:</strong> Distribución con muebles y medidas generales (2D).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Fachada Principal:</strong> 2 Renders 3D.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Corte Esquemático:</strong> Alturas y niveles.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>1 Ronda</strong> de cambios.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 print:py-2">
+                        <p class="text-xs text-center text-gray-500 font-medium">*Mínimo $4,000 MXN (Ref. $250 USD) en proyectos < 50m²</p>
+                    </div>
+                </div>
+
+                <!-- PAQUETE ESTÁNDAR (DESTACADO) -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-gray-800 card-hover relative transform md:-translate-y-4 flex flex-col z-10 print:transform-none">
+                    <div class="absolute top-0 inset-x-0 h-2 bg-gray-800"></div>
+                    <div class="absolute top-4 right-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-gray-800 text-white uppercase tracking-wider shadow-md">
+                            <i class="fas fa-star mr-1 text-yellow-400"></i> Recomendado
+                        </span>
+                    </div>
+                    
+                    <div class="p-8 flex-grow">
+                        <div class="uppercase tracking-wide text-xs font-bold text-gray-600 border-b border-gray-200 pb-2 mb-4">Completo</div>
+                        <h3 class="text-2xl font-bold text-gray-900">Estándar</h3>
+                        <p class="mt-2 text-gray-500 text-sm h-10 print:h-auto print:mb-2">Para casas habitación completas y ampliaciones.</p>
+                        
+                        <!-- PRECIO PRINCIPAL MXN (BASE) -->
+                        <div class="mt-6 flex flex-col items-start space-y-1">
+                            <div class="flex items-baseline">
+                                <span class="text-5xl font-extrabold text-gray-900">$120</span>
+                                <span class="ml-1 text-xl font-medium text-gray-500">MXN/m²</span>
+                            </div>
+                            <!-- Referencia en USD (Tu cifra fija) -->
+                            <div class="text-gray-500 text-sm font-semibold">
+                                (Ref. $7.00 USD/m²)
+                            </div>
+                        </div>
+                        <!-- FIN PRECIO PRINCIPAL -->
+                        
+                        <div class="w-full h-px bg-gray-200 my-6 print:my-3"></div>
+                        
+                        <ul class="space-y-4 print:space-y-2">
+                            <li class="flex items-center text-gray-800 font-semibold bg-gray-100 p-2 rounded-lg -mx-2 border border-gray-200">
+                                <i class="fas fa-plus-circle text-gray-800 mr-3"></i>
+                                <span class="text-sm">Todo lo del Paquete Básico</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Fachadas 3D Completas:</strong> Principal y posterior (4-6 renders).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Recorrido Virtual Exterior:</strong> Video de volumetría.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>Plantas Acotadas:</strong> Medidas principales.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-600 text-sm"><strong>2 Rondas</strong> de cambios.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 print:py-2">
+                        <p class="text-xs text-center text-gray-700 font-bold">*Mínimo $6,000 MXN (Ref. $350 USD) en proyectos < 50m²</p>
+                    </div>
+                </div>
+
+                <!-- PAQUETE PREMIUM -->
+                <div class="bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-700 card-hover flex flex-col text-white">
+                    <div class="p-8 flex-grow">
+                        <div class="uppercase tracking-wide text-xs font-bold text-yellow-500 border-b border-gray-700 pb-2 mb-4">Experiencia Total</div>
+                        <h3 class="text-2xl font-bold text-white">Premium</h3>
+                        <p class="mt-2 text-gray-400 text-sm h-10 print:h-auto print:mb-2">Residencias de lujo o proyectos "llave en mano".</p>
+                        
+                        <!-- PRECIO PRINCIPAL MXN (BASE) -->
+                        <div class="mt-6 flex flex-col items-start space-y-1">
+                            <div class="flex items-baseline">
+                                <span class="text-4xl font-extrabold text-white">$250</span>
+                                <span class="ml-1 text-xl font-medium text-gray-400">MXN/m²</span>
+                            </div>
+                            <!-- Referencia en USD (Tu cifra fija) -->
+                            <div class="text-gray-400 text-sm font-semibold">
+                                (Ref. $14.00 USD/m²)
+                            </div>
+                        </div>
+                        <!-- FIN PRECIO PRINCIPAL -->
+                        
+                        <div class="w-full h-px bg-gray-700 my-6 print:my-3"></div>
+                        
+                        <ul class="space-y-4 print:space-y-2">
+                            <li class="flex items-center text-white font-semibold bg-gray-800 p-2 rounded-lg -mx-2 border border-gray-700">
+                                <i class="fas fa-plus-circle text-yellow-500 mr-3"></i>
+                                <span class="text-sm">Todo lo del Paquete Estándar</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-300 text-sm"><strong>Diseño de Interiores:</strong> Acabados, luz y muebles (Áreas principales).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-300 text-sm"><strong>Renders Interiores:</strong> Visualización 3D interna.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-300 text-sm"><strong>Video Cinematográfico:</strong> Interior y Exterior.</span>
+                            </li>
+                             <li class="flex items-start">
+                                <i class="fas fa-check text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-300 text-sm"><strong>Estimado Paramétrico:</strong> Costo aprox. de obra.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-yellow-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <span class="text-gray-300 text-sm"><strong>3 Rondas</strong> de cambios.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="px-8 py-4 bg-gray-800 border-t border-gray-700 print:py-2">
+                        <p class="text-xs text-center text-gray-400 font-medium">*Mínimo $12,500 MXN (Ref. $700 USD) en proyectos < 50m²</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- Términos y Condiciones -->
+        <div class="mt-16 bg-white rounded-lg border border-gray-200 p-8 shadow-sm print:mt-4 print:p-2 print:border-none">
+            <h4 class="text-lg font-bold text-gray-900 mb-6 border-l-4 border-gray-800 pl-3 print:mb-2 print:text-base">Términos y Condiciones Generales</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 print:gap-4">
+                <!-- Columna Izquierda: Pagos, Precios e Impuestos (Unificados) -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 h-full print:p-2 print:border">
+                    <ul class="space-y-4 text-sm text-gray-600 text-justify print:space-y-1 print:text-xs">
+                        <li class="flex items-start">
+                            <i class="fas fa-file-invoice-dollar text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**Costos e Impuestos:** Los precios mostrados son **NETOS** (antes de impuestos). Al costo total del servicio se deberá agregar el **8% de IVA**, ya que es la tarifa aplicable en la zona fronteriza (Mexicali).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-money-check-alt text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**Forma de Pago:** Se requiere un 50% de anticipo para iniciar los trabajos de diseño y el 50% restante contra la entrega final del material digital.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-ruler-combined text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**Tarifas Mínimas:** En proyectos menores a 50 m² aplican costos fijos para cubrir operatividad: Básico ($4,000 MXN), Estándar ($6,000 MXN) y Premium ($12,500 MXN).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Columna Derecha: Detalles del Servicio -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 h-full print:p-2 print:border">
+                    <ul class="space-y-4 text-sm text-gray-600 text-justify print:space-y-1 print:text-xs">
+                        <li class="flex items-start">
+                            <i class="fas fa-exchange-alt text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**Referencia USD:** Los montos en dólares americanos (USD) son una referencia basada en las tarifas fijas por m² proporcionadas por el Arquitecto. El precio base es MXN y el tipo de cambio oficial para facturación se define el día del pago.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-cloud-download-alt text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**Entregables:** Todo el material se entrega exclusivamente en formato digital (PDF para planos y archivos JPG/MP4 de alta resolución para visuales).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-circle text-gray-400 mt-1 mr-3 flex-shrink-0"></i>
+                            <span>**No Incluye:** Planos ejecutivos constructivos (Instalaciones, Estructural, etc.), firma de perito, trámites de licencia ni levantamiento topográfico.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center border-t border-gray-100 pt-6 print:mt-4 print:pt-2">
+                <p class="text-gray-500 italic font-medium print:text-xs">"Diseñamos espacios funcionales y estéticos que aumentan la plusvalía de tu inversión."</p>
+            </div>
+        </div>
+        
+        <!-- ========================================================================= -->
+        <!-- NUEVO: FORMULARIO DE DIAGNÓSTICO -->
+        <!-- ========================================================================= -->
+        <section class="mt-16 bg-white rounded-2xl shadow-2xl p-6 md:p-10 border-t-4 border-gray-800">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-2">Inicia Tu Proyecto</h2>
+            <p class="text-gray-600 text-center mb-8">Cuéntanos sobre tus necesidades para prepararte una propuesta personalizada.</p>
+            
+            <form id="project-form" class="space-y-6">
+                <!-- 1. Datos de Contacto -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-user-circle mr-2 text-gray-500"></i> Datos de Contacto</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <input type="text" name="nombre" placeholder="Nombre Completo (Requerido)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                        <input type="email" name="email" placeholder="Correo Electrónico (Requerido)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                        <input type="tel" name="telefono" placeholder="Teléfono" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                    </div>
+                </div>
+
+                <!-- 2. Detalles del Terreno -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-map-marked-alt mr-2 text-gray-500"></i> Detalles del Terreno</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                        <input type="number" step="0.01" id="terreno-largo" name="terrenoLargo" placeholder="Largo (m)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                        <input type="number" step="0.01" id="terreno-ancho" name="terrenoAncho" placeholder="Ancho (m)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                        <div class="flex items-center space-x-2">
+                             <input type="text" id="area-terreno-calculada" name="areaTerreno" placeholder="Área Total (m²)" readonly class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-default font-semibold text-gray-800">
+                        </div>
+                    </div>
+                    <label class="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                        <input type="checkbox" id="terreno-irregular" name="terrenoIrregular" class="rounded text-gray-800 focus:ring-gray-500">
+                        <span>Mi terreno es irregular o tengo un área ya definida (marcar para anular Largo/Ancho).</span>
+                    </label>
+                </div>
+                
+                <!-- 3. Detalles del Proyecto -->
+                <div class="border-b border-gray-200 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-tools mr-2 text-gray-500"></i> Alcance y Tipo de Proyecto</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="project-type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Proyecto</label>
+                            <select id="project-type" name="tipoProyecto" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="Casa Nueva (Desde Cero)">Casa Nueva (Desde Cero)</option>
+                                <option value="Remodelación o Ampliación">Remodelación o Ampliación</option>
+                                <option value="Jardín de Eventos / Alberca">Jardín de Eventos / Alberca</option>
+                                <option value="Local / Comercial">Local / Comercial</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="area-size" class="block text-sm font-medium text-gray-700 mb-1">Área Estimada de Construcción (Suma automática de áreas interiores)</label>
+                            <!-- Campo de área ahora es de solo lectura y se calcula automáticamente -->
+                            <input type="text" id="area-size" name="areaEstimada" placeholder="0 m² aprox." readonly class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-default font-semibold text-gray-800">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Requerimientos de Áreas (Checkboxes) -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2 flex items-center"><i class="fas fa-couch mr-2 text-gray-500"></i> Áreas Necesarias (Marca todas las que apliquen)</h3>
+                    
+                    <!-- LEYENDA AGREGADA AQUÍ -->
+                    <p class="text-xs text-gray-500 mb-4 italic border-l-2 border-gray-300 pl-2">
+                        Si requieres un área que no está en la lista (ej: gimnasio, cine, cava), favor de escribirla en la sección de **"Detalles Adicionales"** con su tamaño aproximado.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm area-checkboxes">
+                        <!-- Sociales -->
+                        <div class="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <p class="font-bold text-gray-800">Sociales / Día</p>
+                            <!-- Añadida data-sqm para cálculo -->
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="25" name="area_sociales" value="Sala/Estancia (25m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Sala / Estancia</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="15" name="area_sociales" value="Comedor (15m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Comedor</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="15" name="area_sociales" value="Cocina (15m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Cocina Abierta / Cerrada</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="10" name="area_sociales" value="Estudio/Oficina (10m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Estudio / Oficina en Casa</span></label>
+                        </div>
+                        <!-- Exteriores/Entretenimiento -->
+                        <div class="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <p class="font-bold text-gray-800">Exteriores / Patio</p>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="20" name="area_exteriores" value="Terraza/Asador (20m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Terraza / Área de Asador</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="50" name="area_exteriores" value="Jardín/Paisajismo (50m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Jardín / Paisajismo</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="30" name="area_exteriores" value="Alberca/Jacuzzi (30m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Alberca / Jacuzzi</span></label>
+                            <!-- OPCIONES DE COCHERA ACTUALIZADAS -->
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="20" name="area_exteriores" value="Cochera Sencilla (20m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Cochera Sencilla (1 auto)</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="30" name="area_exteriores" value="Cochera Doble (30m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Cochera Doble (2 autos)</span></label>
+                        </div>
+                        <!-- Privadas -->
+                        <div class="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <p class="font-bold text-gray-800">Privadas / Descanso</p>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="20" name="area_privadas" value="Recámara Principal (20m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Recámara Principal (c/baño)</span></label>
+                            
+                            <!-- NUEVA ESTRUCTURA PARA RECÁMARAS SECUNDARIAS CON INPUT NUMÉRICO -->
+                            <div class="flex items-center space-x-2 text-gray-600">
+                                <span class="flex-shrink-0">Recámaras Secundarias:</span>
+                                <!-- Input numérico: data-sqm-unit define el valor por unidad -->
+                                <input type="number" id="num-secondary-rooms" data-sqm-unit="15" name="num_rec_secundarias" placeholder="0" value="0" min="0" max="10" class="w-16 p-1 border border-gray-300 rounded-lg text-sm text-center focus:ring-gray-500 focus:border-gray-500">
+                                <span class="text-xs text-gray-500">(15m² c/u)</span>
+                            </div>
+
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="18" name="area_privadas" value="Cuarto de TV/Cine (18m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Cuarto de TV / Cine</span></label>
+                            <label class="flex items-center space-x-2 text-gray-600"><input type="checkbox" data-sqm="8" name="area_privadas" value="Cuarto de Servicio/Lavado (8m²)" class="rounded text-gray-800 focus:ring-gray-500"><span>Cuarto de Lavado / Bodega</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Estimación y Detalles Adicionales -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-calculator mr-2 text-gray-500"></i> Estilo y Costo Estimado</h3>
+                    
+                    <!-- Campo de selección de Paquete (Importante para el cálculo) -->
+                    <div class="mb-6">
+                        <label for="paquete-seleccionado" class="block text-sm font-medium text-gray-700 mb-1">Paquete de Diseño Deseado</label>
+                        <select id="paquete-seleccionado" name="paqueteDeseado" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                            <option value="" disabled selected>Selecciona tu paquete para calcular el costo...</option>
+                            <!-- AÑADIDOS data-usd-per-sqm y data-usd-min-price -->
+                            <option value="Básico" data-price-per-sqm="80" data-min-price="4000" data-usd-per-sqm="5.00" data-usd-min-price="250">Básico ($80 MXN/m² - Mín. $4,000 MXN)</option>
+                            <option value="Estándar" data-price-per-sqm="120" data-min-price="6000" data-usd-per-sqm="7.00" data-usd-min-price="350">Estándar ($120 MXN/m² - Mín. $6,000 MXN)</option>
+                            <option value="Premium" data-price-per-sqm="250" data-min-price="12500" data-usd-per-sqm="14.00" data-usd-min-price="700">Premium ($250 MXN/m² - Mín. $12,500 MXN)</option>
+                        </select>
+                    </div>
+
+                    <!-- CAJA DE RESULTADO DEL COSTO -->
+                    <div id="cost-result-box" class="hidden p-6 bg-yellow-50 border border-yellow-200 rounded-lg shadow-inner mb-6 transition-all duration-300">
+                        <h4 class="text-xl font-bold text-yellow-800 mb-2 flex items-center">
+                            <i class="fas fa-tags mr-2"></i> Estimado del Servicio
+                        </h4>
+                        <div class="text-sm space-y-1 text-gray-700">
+                            <p>Costo Neto (Base): <span id="costo-neto" class="font-semibold text-gray-900">$0 MXN</span></p>
+                            <p>IVA (8%): <span id="costo-iva" class="font-semibold text-gray-900">$0 MXN</span></p>
+                            <p class="pt-2 text-lg font-extrabold text-gray-800 border-t border-yellow-300">
+                                Total Estimado MXN: <span id="costo-total-mxn" class="text-green-600">$0 MXN</span>
+                            </p>
+                             <p class="text-sm font-semibold text-gray-600">
+                                Total Estimado USD (Referencia): <span id="costo-total-usd" class="text-gray-900 font-bold">$0 USD</span>
+                            </p>
+                        </div>
+                        <p class="text-xs text-yellow-700 mt-3">
+                            *Esta es una cotización preliminar. Los costos se confirman en la propuesta formal.
+                        </p>
+                    </div>
+                    
+                    <label for="details" class="block text-lg font-semibold text-gray-700 mb-2 flex items-center"><i class="fas fa-lightbulb mr-2 text-gray-500"></i> Estilo y Detalles Adicionales</label>
+                    <textarea id="details" name="detalles" rows="4" placeholder="Describe brevemente el estilo que te gusta (moderno, rústico, minimalista) y tu presupuesto/plazo aproximado. Si requieres un área no listada arriba, ¡escríbela aquí! Si tu terreno es irregular, describe aquí sus dimensiones." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"></textarea>
+                </div>
+
+                <!-- Botón de Envío y Confirmación -->
+                <div class="pt-4">
+                    <div id="confirmation-checkbox-container" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <label class="flex items-start space-x-2 text-sm font-medium text-gray-700 cursor-pointer">
+                            <input type="checkbox" id="confirm-cost" name="confirmCost" class="rounded text-red-600 focus:ring-red-500 mt-1 flex-shrink-0">
+                            <span class="text-red-800 font-semibold">Sí, estoy de acuerdo con el **Costo Total Estimado** y deseo enviar mi solicitud.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="submit-button" class="w-full py-3 px-4 bg-gray-400 text-white font-bold rounded-lg shadow-md transition duration-200 cursor-not-allowed" disabled>
+                        Calcular Costo para Enviar <i class="fas fa-calculator ml-2"></i>
+                    </button>
+                    <p id="response-message" class="text-center text-sm mt-2 hidden"></p>
+                    <p class="text-center text-xs text-gray-500 mt-2">*Al enviar, nos pondremos en contacto contigo en las próximas 24 horas.</p>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm print:hidden">
+        <p>© 2024 ARKONS Arquitectura y Construcción. Mexicali, B.C.</p>
+    </footer>
+
+    <!-- Script de Conexión y Lógica del Formulario -->
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Constantes de Elementos
+            const areaCheckboxes = document.querySelectorAll('.area-checkboxes input[type="checkbox"]');
+            const areaSizeInput = document.getElementById('area-size');
+            const form = document.getElementById('project-form');
+            const numSecondaryRoomsInput = document.getElementById('num-secondary-rooms'); 
+            const terrenoLargoInput = document.getElementById('terreno-largo');
+            const terrenoAnchoInput = document.getElementById('terreno-ancho');
+            const areaTerrenoCalculadaInput = document.getElementById('area-terreno-calculada');
+            const terrenoIrregularCheckbox = document.getElementById('terreno-irregular');
+            const paqueteSeleccionado = document.getElementById('paquete-seleccionado');
+
+            // Constantes del Cálculo de Costos
+            const costResultBox = document.getElementById('cost-result-box');
+            const costoNetoSpan = document.getElementById('costo-neto');
+            const costoIvaSpan = document.getElementById('costo-iva');
+            const costoTotalMxnSpan = document.getElementById('costo-total-mxn'); 
+            const costoTotalUsdSpan = document.getElementById('costo-total-usd');
+            const confirmCostCheckbox = document.getElementById('confirm-cost');
+            const confirmationContainer = document.getElementById('confirmation-checkbox-container');
+            const submitButton = document.getElementById('submit-button');
+
+            // Tasa de IVA fija
+            const IVA_RATE = 0.08;
+            
+            // Almacenar el área de construcción para el cálculo de costos
+            let currentConstructionArea = 0;
+
+            // =========================================================
+            // LÓGICA DE CÁLCULO DE ÁREAS
+            // =========================================================
+
+            function calculateConstructionArea() {
+                let totalArea = 0;
+                
+                // 1. Calcular área de todos los checkboxes regulares (con data-sqm)
+                areaCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const sqmValue = parseFloat(checkbox.getAttribute('data-sqm'));
+                        if (!isNaN(sqmValue)) {
+                            totalArea += sqmValue;
+                        }
+                    }
+                });
+
+                // 2. Calcular área de Recámaras Secundarias (por cantidad)
+                const numRooms = parseFloat(numSecondaryRoomsInput.value);
+                const sqmPerRoom = parseFloat(numSecondaryRoomsInput.getAttribute('data-sqm-unit'));
+                
+                if (!isNaN(numRooms) && numRooms > 0) {
+                    totalArea += (numRooms * sqmPerRoom);
+                }
+
+                currentConstructionArea = totalArea;
+
+                // 3. Actualiza el campo de entrada de ÁREA DE CONSTRUCCIÓN
+                if (totalArea > 0) {
+                    areaSizeInput.value = `${totalArea.toFixed(2)} m² aprox.`;
+                } else {
+                    areaSizeInput.value = '0 m² aprox.';
+                }
+                
+                // Recalcular el costo al cambiar el área
+                calculateEstimatedCost();
+            }
+            
+            function calculateLandArea() {
+                const largo = parseFloat(terrenoLargoInput.value);
+                const ancho = parseFloat(terrenoAnchoInput.value);
+                
+                if (!isNaN(largo) && !isNaN(ancho) && !terrenoIrregularCheckbox.checked) {
+                    const area = largo * ancho;
+                    areaTerrenoCalculadaInput.value = `${area.toFixed(2)} m²`;
+                } else {
+                    areaTerrenoCalculadaInput.value = '';
+                }
+            }
+
+            function handleIrregularLand() {
+                const isIrregular = terrenoIrregularCheckbox.checked;
+                
+                terrenoLargoInput.disabled = isIrregular;
+                terrenoAnchoInput.disabled = isIrregular;
+                
+                if (isIrregular) {
+                    terrenoLargoInput.classList.add('bg-gray-100');
+                    terrenoAnchoInput.classList.add('bg-gray-100');
+                    areaTerrenoCalculadaInput.value = 'Irregular (Ver Detalles)';
+                } else {
+                    terrenoLargoInput.classList.remove('bg-gray-100');
+                    terrenoAnchoInput.classList.remove('bg-gray-100');
+                    calculateLandArea();
+                }
+            }
+
+            // =========================================================
+            // LÓGICA DE CÁLCULO DE COSTOS
+            // =========================================================
+
+            function calculateEstimatedCost() {
+                const selectedOption = paqueteSeleccionado.options[paqueteSeleccionado.selectedIndex];
+                
+                // 1. Obtener datos del paquete (MXN y USD)
+                const pricePerSqm = parseFloat(selectedOption.getAttribute('data-price-per-sqm'));
+                const minPrice = parseFloat(selectedOption.getAttribute('data-min-price'));
+                const usdPerSqm = parseFloat(selectedOption.getAttribute('data-usd-per-sqm'));
+                const usdMinPrice = parseFloat(selectedOption.getAttribute('data-usd-min-price'));
+                
+                // Si no se ha seleccionado un paquete o el área es cero, oculta la caja de costos
+                if (!pricePerSqm || currentConstructionArea === 0) {
+                    costResultBox.classList.add('hidden');
+                    confirmationContainer.classList.add('hidden');
+                    updateSubmitButton(false, 'Calcular Costo para Enviar');
+                    return;
+                }
+                
+                // --- CÁLCULO MXN (BASE) ---
+                let baseCostMXN = currentConstructionArea * pricePerSqm;
+                if (baseCostMXN < minPrice) {
+                    baseCostMXN = minPrice;
+                }
+                const ivaMXN = baseCostMXN * IVA_RATE;
+                const totalCostMXN = baseCostMXN + ivaMXN;
+
+                // --- CÁLCULO USD (REFERENCIA) ---
+                let baseCostUSD = currentConstructionArea * usdPerSqm;
+                if (baseCostUSD < usdMinPrice) {
+                    baseCostUSD = usdMinPrice;
+                }
+                const ivaUSD = baseCostUSD * IVA_RATE;
+                const totalCostUSD = baseCostUSD + ivaUSD;
+
+                // 5. Mostrar resultados
+                costoNetoSpan.textContent = `$${baseCostMXN.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN`;
+                costoIvaSpan.textContent = `$${ivaMXN.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN`;
+                costoTotalMxnSpan.textContent = `$${totalCostMXN.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN`;
+                costoTotalUsdSpan.textContent = `$${totalCostUSD.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} USD`; 
+
+                // 6. Hacer visible la caja de resultados y el checkbox de confirmación
+                costResultBox.classList.remove('hidden');
+                confirmationContainer.classList.remove('hidden');
+                
+                // 7. Actualizar el estado del botón de envío
+                updateSubmitButton(confirmCostCheckbox.checked, 'Confirmar y Enviar Solicitud');
+            }
+
+            function updateSubmitButton(isEnabled, text) {
+                submitButton.disabled = !isEnabled;
+                submitButton.textContent = text;
+                if (isEnabled) {
+                    submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    submitButton.classList.add('bg-gray-800', 'hover:bg-gray-700');
+                } else {
+                    submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    submitButton.classList.remove('bg-gray-800', 'hover:bg-gray-700');
+                }
+            }
+
+            // =========================================================
+            // INICIALIZACIÓN Y EVENT LISTENERS
+            // =========================================================
+
+            // Event Listeners para el cálculo de Áreas de Construcción
+            areaCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', calculateConstructionArea);
+            });
+            numSecondaryRoomsInput.addEventListener('input', calculateConstructionArea);
+            paqueteSeleccionado.addEventListener('change', calculateEstimatedCost); 
+
+            // Event Listeners para el cálculo del Terreno
+            terrenoLargoInput.addEventListener('input', calculateLandArea);
+            terrenoAnchoInput.addEventListener('input', calculateLandArea);
+            terrenoIrregularCheckbox.addEventListener('change', handleIrregularLand);
+            
+            // Listener para el checkbox de confirmación de costo
+            confirmCostCheckbox.addEventListener('change', () => {
+                updateSubmitButton(confirmCostCheckbox.checked, 'Confirmar y Enviar Solicitud');
+            });
+
+
+            // Inicializar al cargar
+            calculateConstructionArea();
+            calculateLandArea();
+            handleIrregularLand(); 
+
+
+            // =========================================================
+            // LÓGICA DE ENVÍO DEL FORMULARIO
+            // =========================================================
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                
+                // Verificar la confirmación del costo antes de enviar
+                if (!confirmCostCheckbox.checked) {
+                    const originalText = submitButton.textContent;
+                    submitButton.textContent = "¡Debe confirmar el costo estimado!";
+                    setTimeout(() => {
+                        submitButton.textContent = originalText;
+                    }, 2000);
+                    return;
+                }
+                
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbw5hK8rA9sUYNLxt2nSd02QVq7Fhdh_qIUpkJXqpqc7H4PgWyN-NCBauVQJvlSrWk6d3Q/exec?no-redirect=true'; 
+                const responseMessage = document.getElementById('response-message');
+                
+                submitButton.disabled = true;
+                submitButton.innerHTML = 'Enviando... <i class="fas fa-spinner fa-spin ml-2"></i>';
+                responseMessage.classList.add('hidden');
+                
+                // --- RECOPILACIÓN DE DATOS ---
+                const formData = new FormData(form);
+                const data = {};
+                
+                formData.forEach((value, key) => {
+                    if (!key.startsWith('area_') && key !== 'num_rec_secundarias' && key !== 'confirmCost') {
+                        data[key] = value;
+                    }
+                });
+
+                const selectedAreas = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    if (checkbox.name !== 'terrenoIrregular' && checkbox.id !== 'confirm-cost') {
+                        selectedAreas.push(checkbox.value);
+                    }
+                });
+
+                const numRoomsValue = parseFloat(document.getElementById('num-secondary-rooms').value);
+                const sqmPerRoom = parseFloat(document.getElementById('num-secondary-rooms').getAttribute('data-sqm-unit'));
+
+                if (numRoomsValue > 0) {
+                    const totalSqmRooms = numRoomsValue * sqmPerRoom;
+                    selectedAreas.push(`Recámaras Secundarias: ${numRoomsValue} uni. (${totalSqmRooms.toFixed(2)}m²)`);
+                }
+                
+                data['areasSeleccionadas'] = selectedAreas.join('; ');
+                
+                // Recopilar costos finales
+                const costoNeto = costoNetoSpan.textContent;
+                const costoTotalMXN = costoTotalMxnSpan.textContent;
+                const costoTotalUSD = costoTotalUsdSpan.textContent;
+                
+                const areaConstruccion = areaSizeInput.value;
+                const areaTerreno = areaTerrenoCalculadaInput.value;
+                const esIrregular = terrenoIrregularCheckbox.checked ? 'Sí' : 'No';
+                const paqueteDeseado = paqueteSeleccionado.value;
+
+                // Mapear el payload al formato de Google Sheets
+                const payload = {
+                    nombre: data.nombre || '',
+                    email: data.email || '',
+                    telefono: data.telefono || '',
+                    
+                    // Datos del Terreno
+                    terrenoLargo: terrenoLargoInput.value || 'N/A',
+                    terrenoAncho: terrenoAnchoInput.value || 'N/A',
+                    areaTerreno: areaTerreno || 'N/A',
+                    terrenoIrregular: esIrregular,
+
+                    // Datos del Proyecto
+                    tipoProyecto: data.tipoProyecto || '',
+                    paqueteDeseado: paqueteDeseado,
+                    areaEstimadaConstruccion: areaConstruccion || '0 m² aprox.', 
+                    areasSeleccionadas: data.areasSeleccionadas || 'Ninguna seleccionada',
+                    detalles: data.detalles || 'Sin detalles adicionales',
+                    
+                    // Datos del Costo (CRÍTICO)
+                    costoNetoEstimado: costoNeto || 'No Calculado',
+                    costoTotalEstimadoMXN: costoTotalMXN || 'No Calculado', 
+                    costoTotalEstimadoUSD: costoTotalUSD || 'No Calculado'
+                };
+
+                // --- ENVÍO ASÍNCRONO ---
+                const queryParams = Object.keys(payload).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(payload[key])).join('&');
+                
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: queryParams
+                })
+                .then(response => {
+                    showSuccessMessage();
+                    form.reset(); 
+                    calculateConstructionArea(); 
+                    calculateLandArea(); 
+                    handleIrregularLand();
+                    // Reiniciar el estado del botón y la confirmación
+                    confirmCostCheckbox.checked = false;
+                    costResultBox.classList.add('hidden');
+                    confirmationContainer.classList.add('hidden');
+                    updateSubmitButton(false, 'Calcular Costo para Enviar');
+                })
+                .catch(error => {
+                    console.error('Error al enviar:', error);
+                    showErrorMessage();
+                })
+                .finally(() => {
+                    // Esto se maneja en el .then() de éxito para re-habilitar al resetear el formulario.
+                });
+                
+                // Funciones de Retroalimentación al Usuario
+                function showSuccessMessage() {
+                    responseMessage.textContent = "¡Gracias! Tu solicitud ha sido enviada. Un experto se pondrá en contacto para confirmar tu propuesta.";
+                    responseMessage.classList.remove('hidden', 'text-red-500');
+                    responseMessage.classList.add('text-green-600', 'font-semibold');
+                }
+
+                function showErrorMessage() {
+                    responseMessage.textContent = "Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo más tarde.";
+                    responseMessage.classList.remove('hidden', 'text-green-600');
+                    responseMessage.classList.add('text-red-500', 'font-semibold');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
