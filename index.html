@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -663,13 +663,22 @@
                 const selectedOption = paqueteSeleccionado.options[paqueteSeleccionado.selectedIndex];
                 
                 // 1. Obtener datos del paquete (MXN y USD)
-                const pricePerSqm = parseFloat(selectedOption.getAttribute('data-price-per-sqm'));
-                const minPrice = parseFloat(selectedOption.getAttribute('data-min-price'));
-                const usdPerSqm = parseFloat(selectedOption.getAttribute('data-usd-per-sqm'));
-                const usdMinPrice = parseFloat(selectedOption.getAttribute('data-usd-min-price'));
+                // Se verifica si hay un paquete seleccionado (el índice 0 es el placeholder "Selecciona...")
+                const isPackageSelected = paqueteSeleccionado.selectedIndex > 0;
                 
-                // Si no se ha seleccionado un paquete o el área es cero, oculta la caja de costos
-                if (!pricePerSqm || currentConstructionArea === 0) {
+                const pricePerSqm = isPackageSelected ? parseFloat(selectedOption.getAttribute('data-price-per-sqm')) : 0;
+                const minPrice = isPackageSelected ? parseFloat(selectedOption.getAttribute('data-min-price')) : 0;
+                const usdPerSqm = isPackageSelected ? parseFloat(selectedOption.getAttribute('data-usd-per-sqm')) : 0;
+                const usdMinPrice = isPackageSelected ? parseFloat(selectedOption.getAttribute('data-usd-min-price')) : 0;
+
+                // Si no se ha seleccionado un paquete O el área de construcción es cero, reinicia la caja de costos
+                if (!isPackageSelected || currentConstructionArea === 0) {
+                    costoNetoSpan.textContent = '$0 MXN';
+                    costoIvaSpan.textContent = '$0 MXN';
+                    costoTotalMxnSpan.textContent = '$0 MXN';
+                    costoTotalUsdSpan.textContent = '$0 USD';
+                    
+                    // Ocultar la caja de resultados
                     costResultBox.classList.add('hidden');
                     confirmationContainer.classList.add('hidden');
                     updateSubmitButton(false, 'Calcular Costo para Enviar');
@@ -765,7 +774,9 @@
                 e.preventDefault(); 
                 
                 // 1. CRÍTICO: Forzar el cálculo final para asegurar que los SPANs tengan el valor más reciente.
-                calculateEstimatedCost(); 
+                // También fuerza la visibilidad del box de costo si un paquete y área fueron seleccionados
+                calculateConstructionArea(); // Forzar el cálculo de área justo antes de enviar
+                calculateEstimatedCost(); // Forzar el cálculo del costo justo antes de enviar
 
                 // 2. Verificar la confirmación del costo antes de enviar
                 if (!confirmCostCheckbox.checked) {
@@ -811,13 +822,18 @@
                 
                 data['areasSeleccionadas'] = selectedAreas.join('; ');
                 
-                // 3. Recopilar costos finales (AHORA DEBEN ESTAR GARANTIZADOS)
-                const costoNeto = costoNetoSpan.textContent;
-                const costoTotalMXN = costoTotalMxnSpan.textContent;
-                const costoTotalUSD = costoTotalUsdSpan.textContent;
+                // 3. Recopilar costos y áreas finales (Captura directa de los campos/span)
+                // --- SE LIMPIA EL TEXTO DE LOS SPANs PARA ASEGURAR QUE EL VALOR SE ENVÍE ---
+                const getPriceText = (element) => element.textContent.trim();
                 
+                const costoNeto = getPriceText(costoNetoSpan);
+                const costoTotalMXN = getPriceText(costoTotalMxnSpan);
+                const costoTotalUSD = getPriceText(costoTotalUsdSpan);
+                
+                // CRÍTICO: Capturar los valores de los INPUTs de solo lectura
                 const areaConstruccion = areaSizeInput.value;
                 const areaTerreno = areaTerrenoCalculadaInput.value;
+                
                 const esIrregular = terrenoIrregularCheckbox.checked ? 'Sí' : 'No';
                 const paqueteDeseado = paqueteSeleccionado.value;
 
@@ -827,20 +843,20 @@
                     email: data.email || '',
                     telefono: data.telefono || '',
                     
-                    // Datos del Terreno
+                    // Datos del Terreno (USANDO LOS VALORES CAPTURADOS)
                     terrenoLargo: terrenoLargoInput.value || 'N/A',
                     terrenoAncho: terrenoAnchoInput.value || 'N/A',
                     areaTerreno: areaTerreno || 'N/A',
                     terrenoIrregular: esIrregular,
 
-                    // Datos del Proyecto
+                    // Datos del Proyecto (USANDO LOS VALORES CAPTURADOS)
                     tipoProyecto: data.tipoProyecto || '',
                     paqueteDeseado: paqueteDeseado,
                     areaEstimadaConstruccion: areaConstruccion || '0 m² aprox.', 
                     areasSeleccionadas: data.areasSeleccionadas || 'Ninguna seleccionada',
                     detalles: data.detalles || 'Sin detalles adicionales',
                     
-                    // Datos del Costo (CRÍTICO: Usamos las variables leídas de los SPANs)
+                    // Datos del Costo (USANDO LOS VALORES LIMPIOS)
                     costoNetoEstimado: costoNeto || 'No Calculado',
                     costoTotalEstimadoMXN: costoTotalMXN || 'No Calculado', 
                     costoTotalEstimadoUSD: costoTotalUSD || 'No Calculado'
