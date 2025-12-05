@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -403,7 +403,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <input type="text" name="nombre" placeholder="Nombre Completo (Requerido)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
                         <input type="email" name="email" placeholder="Correo Electrónico (Requerido)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
-                        <input type="tel" name="telefono" placeholder="Teléfono" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
+                        <input type="tel" name="telefono" placeholder="Teléfono con Código de País (ej: +52 686...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500">
                     </div>
                 </div>
 
@@ -752,7 +752,10 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault(); 
                 
-                // Verificar la confirmación del costo antes de enviar
+                // 1. CRÍTICO: Forzar el cálculo final para asegurar que los SPANs tengan el valor más reciente.
+                calculateEstimatedCost(); 
+
+                // 2. Verificar la confirmación del costo antes de enviar
                 if (!confirmCostCheckbox.checked) {
                     const originalText = submitButton.textContent;
                     submitButton.textContent = "¡Debe confirmar el costo estimado!";
@@ -796,7 +799,7 @@
                 
                 data['areasSeleccionadas'] = selectedAreas.join('; ');
                 
-                // Recopilar costos finales
+                // 3. Recopilar costos finales (AHORA DEBEN ESTAR GARANTIZADOS)
                 const costoNeto = costoNetoSpan.textContent;
                 const costoTotalMXN = costoTotalMxnSpan.textContent;
                 const costoTotalUSD = costoTotalUsdSpan.textContent;
@@ -825,11 +828,14 @@
                     areasSeleccionadas: data.areasSeleccionadas || 'Ninguna seleccionada',
                     detalles: data.detalles || 'Sin detalles adicionales',
                     
-                    // Datos del Costo (CRÍTICO)
+                    // Datos del Costo (CRÍTICO: Usamos las variables leídas de los SPANs)
                     costoNetoEstimado: costoNeto || 'No Calculado',
                     costoTotalEstimadoMXN: costoTotalMXN || 'No Calculado', 
                     costoTotalEstimadoUSD: costoTotalUSD || 'No Calculado'
                 };
+                
+                // Opcional: Log para verificar la data antes del envío
+                console.log("Payload a enviar:", payload);
 
                 // --- ENVÍO ASÍNCRONO ---
                 const queryParams = Object.keys(payload).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(payload[key])).join('&');
@@ -843,10 +849,12 @@
                     body: queryParams
                 })
                 .then(response => {
+                    // La respuesta real no es accesible debido al modo 'no-cors', 
+                    // así que asumimos el éxito si no hay error de red.
                     showSuccessMessage();
                     form.reset(); 
-                    calculateConstructionArea(); 
-                    calculateLandArea(); 
+                    calculateConstructionArea(); // Reinicia el área de construcción
+                    calculateLandArea(); // Reinicia el área de terreno
                     handleIrregularLand();
                     // Reiniciar el estado del botón y la confirmación
                     confirmCostCheckbox.checked = false;
@@ -859,7 +867,7 @@
                     showErrorMessage();
                 })
                 .finally(() => {
-                    // Esto se maneja en el .then() de éxito para re-habilitar al resetear el formulario.
+                    // No hacemos nada aquí ya que el reseteo se maneja en el .then()
                 });
                 
                 // Funciones de Retroalimentación al Usuario
@@ -878,5 +886,4 @@
         });
     </script>
 </body>
-
 </html>
