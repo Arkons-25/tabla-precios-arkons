@@ -728,10 +728,17 @@
             });
             numSecondaryRoomsInput.addEventListener('input', calculateConstructionArea);
             paqueteSeleccionado.addEventListener('change', calculateEstimatedCost); 
-
-            // Event Listeners para el cálculo del Terreno
-            terrenoLargoInput.addEventListener('input', calculateLandArea);
-            terrenoAnchoInput.addEventListener('input', calculateLandArea);
+            
+            // CORRECCIÓN: Agregar listener a los inputs de Terreno para que recalcule el costo.
+            terrenoLargoInput.addEventListener('input', () => {
+                calculateLandArea();
+                calculateEstimatedCost(); // CRÍTICO: Recalcular costo al cambiar largo/ancho
+            });
+            terrenoAnchoInput.addEventListener('input', () => {
+                calculateLandArea();
+                calculateEstimatedCost(); // CRÍTICO: Recalcular costo al cambiar largo/ancho
+            });
+            
             terrenoIrregularCheckbox.addEventListener('change', handleIrregularLand);
             
             // Listener para el checkbox de confirmación de costo
