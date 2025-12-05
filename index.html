@@ -721,6 +721,11 @@
             // =========================================================
             // INICIALIZACIÓN Y EVENT LISTENERS
             // =========================================================
+            
+            // ** CRÍTICO: Llama a la función de cálculo de área al inicio **
+            // Esto asegura que el currentConstructionArea se inicialice
+            // correctamente si hay inputs con valores (aunque sean 0 inicialmente)
+            calculateConstructionArea(); 
 
             // Event Listeners para el cálculo de Áreas de Construcción
             areaCheckboxes.forEach(checkbox => {
@@ -748,7 +753,7 @@
 
 
             // Inicializar al cargar
-            calculateConstructionArea();
+            // calculateConstructionArea(); <-- Se movió esta llamada arriba
             calculateLandArea();
             handleIrregularLand(); 
 
