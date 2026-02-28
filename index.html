@@ -60,12 +60,32 @@
             background-color: #000000 !important;
         }
         
-        /* Botones Llamativos */
+        /* BOTONES LLAMATIVOS Y MEJORADOS */
         .btn-primary {
-            @apply bg-gray-900 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:bg-black active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide;
+            @apply bg-black text-white font-black py-4 px-8 md:py-5 md:px-10 rounded-2xl transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.4)] hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest text-sm md:text-base ring-4 ring-transparent hover:ring-gray-200 cursor-pointer;
         }
+        .btn-primary i {
+            @apply transition-transform duration-300;
+        }
+        /* Animaciones para los iconos del botón principal al pasar el mouse */
+        .btn-primary:hover i.fa-arrow-right, 
+        .btn-primary:hover i.fa-chevron-right, 
+        .btn-primary:hover i.fa-paper-plane {
+            transform: translateX(6px);
+        }
+        .btn-primary:hover i.fa-calculator {
+            transform: scale(1.15) rotate(5deg);
+        }
+
         .btn-secondary {
-            @apply bg-white text-gray-800 font-bold py-4 px-8 rounded-xl transition-all duration-300 border border-gray-300 shadow-sm hover:bg-gray-50 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide;
+            @apply bg-white text-gray-500 font-bold py-4 px-6 md:py-5 md:px-8 rounded-2xl transition-all duration-300 border-2 border-gray-200 shadow-sm hover:border-gray-800 hover:text-gray-900 hover:bg-gray-50 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wider text-xs md:text-sm cursor-pointer;
+        }
+        .btn-secondary i {
+            @apply transition-transform duration-300;
+        }
+        /* Animación de regreso para el botón secundario */
+        .btn-secondary:hover i.fa-arrow-left {
+            transform: translateX(-5px);
         }
 
         .rec-sec-input {
@@ -270,7 +290,7 @@
                     <span id="tArea" class="font-black text-xl">0.00 m²</span>
                 </div>
 
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center mt-8">
                     <button type="button" onclick="nextStep(1)" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
@@ -353,7 +373,7 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between mt-8">
+                <div class="flex justify-between items-center mt-8">
                     <button type="button" onclick="nextStep(2)" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i> Modificar
                     </button>
@@ -396,12 +416,12 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                     <button type="button" onclick="nextStep(3)" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i> Atrás
                     </button>
                     <button type="submit" class="btn-primary" id="finalSubmit">
-                        <span id="btnText">Enviar Solicitud <i class="fas fa-paper-plane"></i></span>
+                        <span id="btnText">Enviar Solicitud</span> <i class="fas fa-paper-plane" id="btnIcon"></i>
                         <span id="btnSpinner" class="hidden"><i class="fas fa-circle-notch fa-spin"></i> Enviando...</span>
                     </button>
                 </div>
@@ -543,6 +563,7 @@
                 // 2. Preparar el envío
                 showModal('Procesando...', 'Conectando con servidores de ARKONS...', 'loading');
                 document.getElementById('btnText').classList.add('hidden');
+                document.getElementById('btnIcon').classList.add('hidden');
                 document.getElementById('btnSpinner').classList.remove('hidden');
 
                 const params = new URLSearchParams();
@@ -580,6 +601,7 @@
                 })
                 .finally(() => {
                     document.getElementById('btnText').classList.remove('hidden');
+                    document.getElementById('btnIcon').classList.remove('hidden');
                     document.getElementById('btnSpinner').classList.add('hidden');
                 });
 
@@ -588,6 +610,7 @@
                 console.error("Error interno:", error);
                 alert("Hubo un error al recopilar los datos: " + error.message);
                 document.getElementById('btnText').classList.remove('hidden');
+                if(document.getElementById('btnIcon')) document.getElementById('btnIcon').classList.remove('hidden');
                 document.getElementById('btnSpinner').classList.add('hidden');
                 closeModal();
             }
