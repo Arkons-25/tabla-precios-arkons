@@ -9,7 +9,6 @@
     <meta property="og:title" content="Calculadora de Presupuesto | ARKONS">
     <meta property="og:description" content="Cotiza tu proyecto arquitectónico o construcción en segundos. Obtén un estimado de inversión al instante.">
     <meta property="og:type" content="website">
-    <!-- Nota: Para que la imagen se vea en Facebook, el logo debe estar subido a internet, no en tu compu -->
     <meta property="og:image" content="https://placehold.co/1200x630/000000/ffffff?text=ARKONS+Calculadora"> 
 
     <!-- Tailwind CSS -->
@@ -34,6 +33,12 @@
         }
         .step-content.active {
             display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .input-field {
@@ -41,43 +46,26 @@
         }
 
         .card {
-            @apply bg-white p-6 shadow-2xl rounded-2xl;
+            @apply bg-white p-6 shadow-2xl rounded-2xl border-t-4 border-gray-900;
         }
 
         /* ESTILO DE PAQUETES - RESALTADO MEJORADO */
         .package-select {
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            @apply border-2 border-gray-200 relative overflow-hidden bg-white;
-        }
-
-        .package-select.selected {
-            border-color: #000000 !important;
-            border-width: 4px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-            transform: scale(1.05);
+            @apply border-4 border-gray-900 relative overflow-hidden bg-white rounded-xl shadow-xl;
+            transform: scale(1.02);
             z-index: 20;
         }
 
-        .package-select.selected .package-header {
+        .package-select .package-header {
             background-color: #000000 !important;
         }
-
-        .package-select.selected .check-icon {
-            display: flex !important;
-        }
         
-        .check-icon {
-            display: none;
-            @apply absolute top-2 right-2 text-white bg-green-500 rounded-full w-8 h-8 items-center justify-center text-sm z-30 shadow-lg;
-        }
-        
-        /* Botones Llamativos (Estilo Original Estable) */
+        /* Botones Llamativos */
         .btn-primary {
-            @apply bg-gray-900 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:bg-black active:scale-95 flex items-center justify-center gap-2;
+            @apply bg-gray-900 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:bg-black active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide;
         }
         .btn-secondary {
-            @apply bg-white text-gray-800 font-bold py-4 px-8 rounded-xl transition-all duration-300 border border-gray-300 shadow-sm hover:bg-gray-50 active:scale-95 flex items-center justify-center gap-2;
+            @apply bg-white text-gray-800 font-bold py-4 px-8 rounded-xl transition-all duration-300 border border-gray-300 shadow-sm hover:bg-gray-50 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide;
         }
 
         .rec-sec-input {
@@ -85,12 +73,12 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col font-sans text-gray-800">
 
     <!-- Encabezado ARKONS con Logo -->
     <header class="bg-white shadow-sm border-b border-gray-200 relative pb-12">
         <div class="h-40 bg-gray-900 w-full relative overflow-hidden flex items-center justify-center">
-            <div class="absolute inset-0 opacity-5 dot-pattern"></div>
+            <div class="absolute inset-0 opacity-10 dot-pattern"></div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center -mt-24">
@@ -98,8 +86,8 @@
                 <img src="LOGO 2024.png" onerror="this.onerror=null;this.src='https://placehold.co/150x150/333333/ffffff?text=ARKONS';" alt="ARKONS" class="h-32 object-contain mx-auto">
             </div>
             <div class="mt-4">
-                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">Calculadora de Presupuesto</h1>
-                <p class="text-lg text-gray-500 font-light mt-1 uppercase tracking-widest">Diseño y Anteproyecto Arquitectónico</p>
+                <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight uppercase">Calculadora de Presupuesto</h1>
+                <p class="text-sm md:text-base text-gray-500 font-bold mt-1 uppercase tracking-widest">Diseño y Anteproyecto</p>
             </div>
         </div>
     </header>
@@ -107,25 +95,27 @@
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
         
         <form id="architectureForm" class="card">
-            <input type="hidden" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbzF8HBuVcXsjaOPOt_ir6Q7SrfQkLSZC9-wcs0SEBwk-R0PhEhBZ_usFG52fluALhI41A/exec">
+            <!-- URL NUEVA DEL SCRIPT DE GOOGLE -->
+            <input type="hidden" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbyACetMcTIzQvcAS54EQHg1iCjX_mD2DAqDEaByHLEJdB6wfTk6lNW8-aaI-fHoKAg-EA/exec">
 
             <!-- Modal de Mensajes -->
-            <div id="messageBox" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-                <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center">
-                    <div id="loadingIndicator" class="animate-spin rounded-full h-12 w-12 border-t-4 border-gray-900 mx-auto mb-4"></div>
-                    <p id="messageText" class="text-lg font-semibold text-gray-800 mb-6"></p>
-                    <button type="button" onclick="closeModal()" id="closeMessage" class="w-full btn-primary hidden">Entendido</button>
+            <div id="messageBox" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center transform transition-all scale-100">
+                    <div id="loadingIndicator" class="animate-spin rounded-full h-12 w-12 border-t-4 border-black mx-auto mb-4"></div>
+                    <p id="messageText" class="text-lg font-bold text-gray-800 mb-6"></p>
+                    <button type="button" onclick="closeModal()" id="closeMessage" class="w-full btn-primary hidden text-sm py-3">Entendido</button>
                 </div>
             </div>
 
             <!-- PASO 1: ÁREAS Y REQUERIMIENTOS -->
             <div id="step1" class="step-content active">
-                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2 uppercase tracking-tighter">1. Espacios Requeridos</h2>
+                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
+                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span> Espacios y Tipo
+                </h2>
                 
-                <!-- MOVIDO DE PASO 2: TIPO DE OBRA -->
-                <div class="mb-8 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <div class="mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-100">
                     <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Tipo de Obra</label>
-                    <select id="tipoProyecto" class="input-field bg-white">
+                    <select id="tipoProyecto" class="input-field bg-white font-semibold cursor-pointer">
                         <option value="Casa Residencial">Casa Residencial</option>
                         <option value="Remodelación Mayor">Remodelación Mayor</option>
                         <option value="Remodelación de fachada">Remodelación de fachada</option>
@@ -133,250 +123,265 @@
                     </select>
                 </div>
 
-                <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">Seleccione las Áreas del Proyecto:</label>
+                <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">Seleccione las Áreas:</label>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Sala" data-sqm="15" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Sala</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(15 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Sala</span> <input type="checkbox" name="areasSeleccionadas" value="Sala" data-sqm="15" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(15 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Comedor" data-sqm="12" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Comedor</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(12 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Comedor</span> <input type="checkbox" name="areasSeleccionadas" value="Comedor" data-sqm="12" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(12 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Cocina" data-sqm="10" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Cocina</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(10 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cocina</span> <input type="checkbox" name="areasSeleccionadas" value="Cocina" data-sqm="10" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(10 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="½ Baño" data-sqm="3" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">½ Baño</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(3 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">½ Baño</span> <input type="checkbox" name="areasSeleccionadas" value="½ Baño" data-sqm="3" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(3 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Baño Completo" data-sqm="5" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Baño Completo</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(5 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Baño Completo</span> <input type="checkbox" name="areasSeleccionadas" value="Baño Completo" data-sqm="5" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(5 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Estudio" data-sqm="8" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Estudio</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(8 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Estudio</span> <input type="checkbox" name="areasSeleccionadas" value="Estudio" data-sqm="8" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(8 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Terraza" data-sqm="18" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Terraza</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(18 m²)</span>
+                    
+                    <!-- ÁREA: ESCALERA -->
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Escalera</span> <input type="checkbox" name="areasSeleccionadas" value="Escalera" data-sqm="6" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(2 Pisos - 6 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Alberca" data-sqm="25" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Alberca</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(25 m²)</span>
+
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Terraza</span> <input type="checkbox" name="areasSeleccionadas" value="Terraza" data-sqm="18" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(18 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Cochera 2 Autos" data-sqm="36" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Cochera 2</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(36 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Alberca</span> <input type="checkbox" name="areasSeleccionadas" value="Alberca" data-sqm="25" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(25 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Cochera 1 Auto" data-sqm="18" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Cochera 1</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(18 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cochera (2)</span> <input type="checkbox" name="areasSeleccionadas" value="Cochera 2 Autos" data-sqm="36" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(36 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Lavandería" data-sqm="4" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Lavandería</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(4 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cochera (1)</span> <input type="checkbox" name="areasSeleccionadas" value="Cochera 1 Auto" data-sqm="18" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(18 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Rec. Principal" data-sqm="20" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Rec. Principal (Con Baño)</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(20 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Lavandería</span> <input type="checkbox" name="areasSeleccionadas" value="Lavandería" data-sqm="4" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(4 m²)</span>
                     </label>
-                    <label class="flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center"><input type="checkbox" name="areasSeleccionadas" value="Cuarto TV" data-sqm="15" onchange="updateM2()"><span class="ml-2 text-sm font-semibold">Cuarto TV</span></div>
-                        <span class="text-[10px] text-gray-400 mt-1">(15 m²)</span>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Rec. Principal</span> <input type="checkbox" name="areasSeleccionadas" value="Rec. Principal" data-sqm="20" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(Con Baño - 20 m²)</span>
+                    </label>
+                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
+                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cuarto TV</span> <input type="checkbox" name="areasSeleccionadas" value="Cuarto TV" data-sqm="15" onchange="updateM2()" class="accent-black w-4 h-4"></div>
+                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(15 m²)</span>
                     </label>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between">
-                        <label class="flex items-center cursor-pointer"><input type="checkbox" id="checkSec" onchange="toggleSec(); updateM2()"><span class="ml-2 text-sm font-bold">Rec. Secundarias</span></label>
-                        <div id="secContainer" class="hidden flex items-center gap-1">
-                            <input type="number" id="numSec" value="1" min="1" class="rec-sec-input" oninput="updateM2()">
+                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between hover:border-gray-400 transition-colors">
+                        <label class="flex items-center cursor-pointer w-full"><input type="checkbox" id="checkSec" onchange="toggleSec(); updateM2()" class="accent-black"><span class="ml-2 text-sm font-bold">Rec. Secundarias</span></label>
+                        <div id="secContainer" class="hidden flex items-center gap-2">
+                            <input type="number" id="numSec" value="1" min="1" class="rec-sec-input focus:ring-black" oninput="updateM2()">
                             <span class="text-[10px] font-bold text-gray-400">x 12m²</span>
                         </div>
                     </div>
-                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="checkOtro" onchange="toggleOtro(); updateM2()">
-                            <div class="ml-2">
-                                <span class="text-sm font-bold block">Otra</span>
+                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between hover:border-gray-400 transition-colors">
+                        <label class="flex items-center cursor-pointer w-full">
+                            <input type="checkbox" id="checkOtro" onchange="toggleOtro(); updateM2()" class="accent-black">
+                            <div class="ml-2 flex flex-col">
+                                <span class="text-sm font-bold">Otra</span>
                                 <span class="text-[10px] text-gray-500 font-normal">(Escriba los m²)</span>
                             </div>
                         </label>
-                        <div id="otroContainer" class="hidden flex items-center gap-1">
-                            <input type="number" id="numOtro" value="1" min="1" class="rec-sec-input" oninput="updateM2()">
+                        <div id="otroContainer" class="hidden flex items-center gap-2">
+                            <input type="number" id="numOtro" value="1" min="1" class="rec-sec-input focus:ring-black" oninput="updateM2()">
                             <span class="text-[10px] font-bold text-gray-400">m²</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-4 bg-gray-100 rounded-xl mb-6 flex justify-between items-center border-l-8 border-gray-900 shadow-inner">
-                    <span class="font-bold text-gray-600 uppercase text-xs tracking-widest">Total Construcción Seleccionada:</span>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-gray-600 uppercase text-xs tracking-widest">Total Construcción:</span>
+                        <span class="text-[10px] text-gray-500 font-medium mt-1">* Incluye 10% extra por circulaciones</span>
+                    </div>
                     <span id="totalM2" class="text-2xl font-black text-gray-900">0.00 m²</span>
                 </div>
 
                 <div class="mb-8">
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Detalles Adicionales del Proyecto</label>
-                    <textarea name="detalles" id="detalles" rows="5" class="input-field w-full" placeholder="Ej. Estilo minimalista, acabados en piedra, etc."></textarea>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Detalles Adicionales</label>
+                    <textarea name="detalles" id="detalles" rows="4" class="input-field w-full text-sm" placeholder="Ej. Estilo minimalista, acabados en piedra, etc."></textarea>
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="button" onclick="nextStep(2)" class="btn-primary">Siguiente <i class="fas fa-arrow-right"></i></button>
+                    <button type="button" onclick="nextStep(2)" class="btn-primary">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
 
             <!-- PASO 2: TERRENO Y ALCANCE -->
             <div id="step2" class="step-content">
-                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2 uppercase tracking-tighter">2. Terreno y Alcance</h2>
+                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
+                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span> Terreno
+                </h2>
                 
-                <div class="mb-8 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                    <label class="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-widest text-center">¿Cómo es la forma de su terreno?</label>
-                    <div class="flex justify-center gap-8">
-                        <label class="flex items-center cursor-pointer group">
-                            <input type="radio" name="terrenoIrregular" value="No" checked onchange="toggleIrregularInputs('No')" class="form-radio text-gray-900 w-5 h-5">
-                            <span class="ml-2 text-sm font-semibold group-hover:text-black">Regular (Rectangular)</span>
+                <div class="mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
+                    <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">¿Cómo es la forma de su terreno?</label>
+                    <div class="flex justify-center gap-4 md:gap-8">
+                        <label class="flex items-center cursor-pointer group bg-white px-4 py-2 rounded-lg border hover:border-black transition-all shadow-sm">
+                            <input type="radio" name="terrenoIrregular" value="No" checked onchange="toggleIrregularInputs('No')" class="accent-black w-4 h-4">
+                            <span class="ml-2 text-sm font-bold text-gray-600 group-hover:text-black">Regular (Rectangular)</span>
                         </label>
-                        <label class="flex items-center cursor-pointer group">
-                            <input type="radio" name="terrenoIrregular" value="Sí" onchange="toggleIrregularInputs('Sí')" class="form-radio text-gray-900 w-5 h-5">
-                            <span class="ml-2 text-sm font-semibold group-hover:text-black">Irregular</span>
+                        <label class="flex items-center cursor-pointer group bg-white px-4 py-2 rounded-lg border hover:border-black transition-all shadow-sm">
+                            <input type="radio" name="terrenoIrregular" value="Sí" onchange="toggleIrregularInputs('Sí')" class="accent-black w-4 h-4">
+                            <span class="ml-2 text-sm font-bold text-gray-600 group-hover:text-black">Irregular</span>
                         </label>
                     </div>
                 </div>
 
                 <div id="containerRegular" class="grid grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-tighter">Largo (m)</label>
-                        <input type="number" id="tLargo" class="input-field" placeholder="0.00" oninput="calcTerreno()">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Largo (m)</label>
+                        <input type="number" id="tLargo" class="input-field font-bold text-lg" placeholder="0.00" oninput="calcTerreno()">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-tighter">Ancho (m)</label>
-                        <input type="number" id="tAncho" class="input-field" placeholder="0.00" oninput="calcTerreno()">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Ancho (m)</label>
+                        <input type="number" id="tAncho" class="input-field font-bold text-lg" placeholder="0.00" oninput="calcTerreno()">
                     </div>
                 </div>
 
                 <div id="containerIrregular" class="hidden mb-6">
-                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-tighter">Metros Cuadrados Totales del Terreno (m²)</label>
-                    <input type="number" id="tAreaManual" class="input-field" placeholder="Ingrese el área total manualmente" oninput="calcTerreno()">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Metros Cuadrados Totales (m²)</label>
+                    <input type="number" id="tAreaManual" class="input-field font-bold text-lg" placeholder="Ingrese el área total" oninput="calcTerreno()">
                 </div>
 
                 <div class="p-4 bg-gray-900 text-white rounded-xl mb-8 flex justify-between items-center shadow-lg">
-                    <span class="text-xs font-bold uppercase tracking-widest opacity-70">Superficie Total del Terreno:</span>
+                    <span class="text-xs font-bold uppercase tracking-widest opacity-70">Superficie Terreno:</span>
                     <span id="tArea" class="font-black text-xl">0.00 m²</span>
                 </div>
 
                 <div class="flex justify-between">
-                    <button type="button" onclick="nextStep(1)" class="btn-secondary"><i class="fas fa-arrow-left"></i> Anterior</button>
-                    <button type="button" onclick="prepareStep3()" class="btn-primary">Ver Presupuesto <i class="fas fa-calculator"></i></button>
+                    <button type="button" onclick="nextStep(1)" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button type="button" onclick="prepareStep3()" class="btn-primary">
+                        Ver Presupuesto <i class="fas fa-calculator"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- PASO 3: SELECCIÓN DE PAQUETE Y COSTO -->
+            <!-- PASO 3: INVERSIÓN ESTIMADA -->
             <div id="step3" class="step-content">
-                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2 uppercase tracking-tighter">3. Selección de Paquete y Costo</h2>
-                
-                <p class="text-sm text-gray-500 mb-4 text-center italic font-bold">⚠️ Seleccione una tarjeta para calcular el total:</p>
+                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
+                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span> Inversión Estimada
+                </h2>
 
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <!-- Esencial -->
-                    <div id="packageEsencial" class="package-select card !p-0" onclick="selectPackageAndCalc('Esencial')">
-                        <div class="check-icon"><i class="fas fa-check"></i></div>
-                        <!-- Header más grande -->
-                        <div class="package-header bg-gray-500 text-white p-4 flex justify-between items-center transition-all duration-300">
-                            <span class="font-bold uppercase tracking-widest text-base">Esencial</span>
-                            <span class="text-2xl font-black">$80/m²</span>
+                <div class="max-w-xl mx-auto mb-8">
+                    <!-- Avanzado (Único Paquete Especializado) -->
+                    <div id="packageAvanzado" class="package-select">
+                        <div class="package-header text-white p-5 flex flex-col items-center justify-center transition-all duration-300">
+                            <span class="font-bold uppercase tracking-widest text-lg flex items-center gap-2">Anteproyecto Arquitectónico <i class="fas fa-star text-yellow-400 text-xs"></i></span>
+                            <span class="text-3xl font-black mt-1">$130<span class="text-sm font-medium opacity-70">/m²</span></span>
                         </div>
-                        <!-- Contenido con letra más legible (text-sm) -->
-                        <div class="p-5 text-sm text-gray-700 space-y-2">
-                            <ul class="space-y-2">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Plantas Arquitectónicas (con medidas)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Fachadas Arquitectónicas (con medidas)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>2 Renders de Fachada (representación en 3D)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>1 Ronda de cambios</li>
-                            </ul>
-                            <div class="mt-3 border-t pt-2">
-                                <p class="font-bold text-gray-900">Mínimo: $4,000 MXN</p>
-                                <p class="text-xs text-gray-500 italic">(Para proyectos menores a 50 m²)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Avanzado -->
-                    <div id="packageAvanzado" class="package-select card !p-0" onclick="selectPackageAndCalc('Avanzado')">
-                        <div class="check-icon"><i class="fas fa-check"></i></div>
-                        <!-- Header más grande -->
-                        <div class="package-header bg-gray-500 text-white p-4 flex justify-between items-center transition-all duration-300">
-                            <span class="font-bold uppercase tracking-widest text-base">Avanzado ⭐</span>
-                            <span class="text-2xl font-black">$130/m²</span>
-                        </div>
-                        <!-- Contenido con letra más legible (text-sm) -->
-                        <div class="p-5 text-sm text-gray-700 space-y-2">
-                            <ul class="space-y-2">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Plantas Arquitectónicas (con ejes y medidas)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Fachadas Arquitectónicas (con medidas)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>3-5 Renders de Fachada (representación en 3D)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Recorrido Virtual (Video)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>2 Rondas de cambios</li>
-                            </ul>
-                            <div class="mt-3 border-t pt-2">
-                                <p class="font-bold text-gray-900">Mínimo: $6,500 MXN</p>
-                                <p class="text-xs text-gray-500 italic">(Para proyectos menores a 50 m²)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-3 mb-8">
-                    <div class="flex justify-between p-3 bg-gray-50 rounded-xl"><span class="text-gray-500 font-bold uppercase text-[10px] tracking-widest">Construcción Total:</span> <span id="resM2" class="font-black text-gray-900"></span></div>
-                    
-                    <div class="bg-black text-white p-6 rounded-3xl shadow-2xl text-left">
-                        <p class="text-[9px] uppercase tracking-[0.4em] opacity-60 mb-4 font-bold text-center">Resumen de Inversión (IVA 8% Zona Fronteriza)</p>
-                        
-                        <div class="space-y-2 border-b border-white/10 pb-4 mb-4">
-                            <div class="flex justify-between text-xs opacity-80">
-                                <span>Costo Neto (Subtotal):</span>
-                                <span id="resSubtotal" class="font-bold">---</span>
-                            </div>
-                            <div class="flex justify-between text-xs opacity-80">
-                                <span>IVA (8%):</span>
-                                <span id="resIva" class="font-bold">---</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm font-bold uppercase tracking-widest opacity-90">Inversión Total:</span>
-                            <span id="resCostoMXN" class="text-3xl font-black">---</span>
-                        </div>
-                        
-                        <div class="mt-4 pt-3 border-t border-white/10 text-center">
-                            <!-- PRECIO USD MAS VISIBLE -->
-                            <p id="resCostoUSD" class="text-lg font-bold text-white tracking-wide mb-4">---</p>
+                        <div class="p-6 text-sm text-gray-700 space-y-4">
                             
-                            <!-- LEYENDA DE PAGO -->
-                            <p class="text-xs text-gray-300 font-medium italic border-t border-white/10 pt-3">
-                                * Se requiere el 50% de anticipo y el resto en contra entrega del proyecto.
-                            </p>
+                            <!-- AVISO DE NO INTERIORES -->
+                            <div class="bg-red-50 text-red-700 p-3 rounded-lg border border-red-200 text-xs font-bold text-center uppercase tracking-wider flex items-center justify-center gap-2">
+                                <i class="fas fa-exclamation-circle text-lg"></i>
+                                Solo diseño exterior (No incluye interiores)
+                            </div>
+
+                            <ul class="space-y-3 mt-4">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Plantas Arquitectónicas (con ejes y medidas)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Fachadas Arquitectónicas (con medidas)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>3 a 5 Renders de Fachada (representación en 3D)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Recorrido Virtual Exterior (Video)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>2 Rondas de cambios en la propuesta</span></li>
+                            </ul>
+                            
+                            <div class="mt-5 pt-4 border-t border-dashed border-gray-200 text-center">
+                                <p class="font-bold text-gray-800">Inversión Mínima: $6,500 MXN</p>
+                                <p class="text-xs text-gray-400 italic mt-1">(Aplica para proyectos menores a 50 m²)</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between">
-                    <button type="button" onclick="nextStep(2)" class="btn-secondary">Anterior</button>
-                    <button type="button" onclick="validateStep3()" class="btn-primary">Datos de Contacto <i class="fas fa-chevron-right"></i></button>
+                <div class="bg-gray-900 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-6 text-center border-b border-gray-700 pb-4">Desglose de Inversión (Incluye IVA 8%)</p>
+                    
+                    <div class="flex justify-between items-center text-base md:text-lg text-gray-300 mb-4 border-b border-gray-700/50 pb-3">
+                        <span class="font-semibold">Construcción Total:</span>
+                        <span id="resM2" class="font-mono text-white font-bold text-lg md:text-xl">---</span>
+                    </div>
+
+                    <div class="space-y-4 mb-8 border-b border-gray-700/50 pb-4">
+                        <div class="flex justify-between items-center text-base md:text-lg text-gray-300">
+                            <span class="font-semibold">Subtotal (Neto):</span>
+                            <span id="resSubtotal" class="font-mono text-white font-bold text-lg md:text-xl">---</span>
+                        </div>
+                        <div class="flex justify-between items-center text-base md:text-lg text-gray-300">
+                            <span class="font-semibold">IVA (8%):</span>
+                            <span id="resIva" class="font-mono text-white font-bold text-lg md:text-xl">---</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-1">Total Final MXN</span>
+                        <h3 id="resCostoMXN" class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">---</h3>
+                        
+                        <div class="inline-block bg-white/10 px-4 py-2 rounded-lg border border-white/10 mb-4">
+                            <p id="resCostoUSD" class="text-lg md:text-xl font-bold text-white tracking-wide">---</p>
+                        </div>
+                        
+                        <p class="text-xs text-gray-300 font-medium italic border-t border-gray-700 pt-3 mb-2">
+                            * Se requiere el 50% de anticipo y el resto en contra entrega del proyecto.
+                        </p>
+                        <p class="text-xs text-gray-400 font-medium italic leading-relaxed">
+                            * Este presupuesto se calculó sobre una base estimada en m² de construcción, el monto total se ajustará de acuerdo a los metros cuadrados finales resultantes del proyecto.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-8">
+                    <button type="button" onclick="nextStep(2)" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Modificar
+                    </button>
+                    <button type="button" onclick="nextStep(4)" class="btn-primary">
+                        Contactar <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
 
             <!-- PASO 4: CONTACTO -->
             <div id="step4" class="step-content">
-                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2 uppercase tracking-tighter">4. Finalizar Solicitud</h2>
-                <div class="space-y-5 mb-8">
-                    <div><label class="block text-sm font-bold text-gray-700 mb-1">NOMBRE COMPLETO</label><input type="text" id="nombre" class="input-field" placeholder="Nombre completo" required></div>
-                    <div><label class="block text-sm font-bold text-gray-700 mb-1">CORREO ELECTRÓNICO</label><input type="email" id="email" class="input-field" placeholder="correo@ejemplo.com" required></div>
+                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
+                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span> Finalizar
+                </h2>
+                
+                <div class="space-y-6 mb-8">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">WHATSAPP / TELÉFONO</label>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">Nombre Completo</label>
+                        <input type="text" id="nombre" class="input-field bg-gray-50" placeholder="Escriba su nombre..." required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">Correo Electrónico</label>
+                        <input type="email" id="email" class="input-field bg-gray-50" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">WhatsApp / Teléfono</label>
                         <div class="flex">
-                            <select id="lada" class="p-3 border border-gray-300 rounded-l-lg bg-gray-50 text-gray-700 border-r-0 focus:ring-gray-800 focus:border-gray-800 outline-none w-28">
+                            <select id="lada" class="p-3 border border-gray-300 rounded-l-lg bg-gray-50 text-gray-700 border-r-0 focus:ring-gray-800 focus:border-gray-800 outline-none w-28 text-sm font-bold">
                                 <option value="+52">🇲🇽 +52</option>
                                 <option value="+1">🇺🇸 +1</option>
                                 <option value="+34">🇪🇸 +34</option>
@@ -386,12 +391,15 @@
                                 <option value="+56">🇨🇱 +56</option>
                                 <option value="">🌐 Otro</option>
                             </select>
-                            <input type="tel" id="telefono" class="w-full p-3 border border-gray-300 rounded-r-lg focus:ring-gray-800 focus:border-gray-800 outline-none transition-all" placeholder="123 456 7890" required>
+                            <input type="tel" id="telefono" class="w-full p-3 border border-gray-300 rounded-r-lg focus:ring-gray-800 focus:border-gray-800 outline-none transition-all" placeholder="1234567890" required>
                         </div>
                     </div>
                 </div>
+
                 <div class="flex justify-between">
-                    <button type="button" onclick="nextStep(3)" class="btn-secondary">Anterior</button>
+                    <button type="button" onclick="nextStep(3)" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Atrás
+                    </button>
                     <button type="submit" class="btn-primary" id="finalSubmit">
                         <span id="btnText">Enviar Solicitud <i class="fas fa-paper-plane"></i></span>
                         <span id="btnSpinner" class="hidden"><i class="fas fa-circle-notch fa-spin"></i> Enviando...</span>
@@ -403,7 +411,7 @@
 
     <script>
         let currentStep = 1;
-        let selectedPkg = '';
+        let selectedPkg = 'Avanzado'; // Paquete único por defecto
         let totalM2Const = 0;
 
         window.onload = () => { updateM2(); };
@@ -429,6 +437,12 @@
             document.querySelectorAll('input[name="areasSeleccionadas"]:checked').forEach(c => sum += parseFloat(c.dataset.sqm));
             if (document.getElementById('checkSec').checked) sum += (parseInt(document.getElementById('numSec').value) || 0) * 12;
             if (document.getElementById('checkOtro').checked) sum += (parseFloat(document.getElementById('numOtro').value) || 0);
+            
+            // Se agrega el 10% automático para circulaciones y muros
+            if (sum > 0) {
+                sum = sum * 1.10;
+            }
+            
             totalM2Const = sum;
             document.getElementById('totalM2').innerText = sum.toFixed(2) + ' m²';
         }
@@ -459,36 +473,25 @@
                 return;
             }
             document.getElementById('resM2').innerText = totalM2Const.toFixed(2) + ' m²';
+            calculateFinal(); // Se calcula directamente el paquete único
             nextStep(3);
-            if (selectedPkg) calculateFinal();
-        }
-
-        function selectPackageAndCalc(pkg) {
-            selectedPkg = pkg;
-            document.querySelectorAll('.package-select').forEach(el => el.classList.remove('selected'));
-            document.getElementById('package' + pkg).classList.add('selected');
-            calculateFinal();
         }
 
         function calculateFinal() {
-            const precio = selectedPkg === 'Esencial' ? 80 : 130;
+            const precio = 130; // Precio único del paquete Avanzado
             let subtotal = totalM2Const * precio;
-            if (selectedPkg === 'Esencial' && subtotal < 4000) subtotal = 4000;
-            if (selectedPkg === 'Avanzado' && subtotal < 6500) subtotal = 6500;
+            
+            // Inversión Mínima de $6,500
+            if (subtotal < 6500) subtotal = 6500;
 
             const iva = subtotal * 0.08; 
             const totalMXN = subtotal + iva; 
-            const totalUSD = totalMXN / 18.50; 
+            const totalUSD = totalMXN / 17.23; 
 
             document.getElementById('resSubtotal').innerText = '$' + subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
             document.getElementById('resIva').innerText = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
             document.getElementById('resCostoMXN').innerText = '$' + totalMXN.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
             document.getElementById('resCostoUSD').innerText = 'EQUIVALENTE A: $' + totalUSD.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' USD APROX.';
-        }
-
-        function validateStep3() {
-            if (!selectedPkg) { showModal('Selección Faltante', 'Elija un paquete para continuar.', 'error'); return; }
-            nextStep(4);
         }
 
         function showModal(title, msg, type) {
@@ -504,55 +507,90 @@
 
         function closeModal() { document.getElementById('messageBox').classList.add('hidden'); }
 
+        // --- LÓGICA DE ENVÍO REFORZADA ---
         document.getElementById('architectureForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const url = document.getElementById('scriptUrl').value;
-            const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
-            const telInput = document.getElementById('telefono').value;
-            const lada = document.getElementById('lada').value;
-            const tel = lada + ' ' + telInput; // Concatenar Lada y Número
             
-            const esIrregular = document.querySelector('input[name="terrenoIrregular"]:checked').value;
-            const largo = document.getElementById('tLargo').value;
-            const ancho = document.getElementById('tAncho').value;
-            const areaTerrText = document.getElementById('tArea').innerText;
-            const tipo = document.getElementById('tipoProyecto');
-            const tipoVal = tipo.options[tipo.selectedIndex].value;
-            
-            showModal('Procesando...', 'Enviando su solicitud a ARKONS...', 'loading');
-            document.getElementById('btnText').classList.add('hidden');
-            document.getElementById('btnSpinner').classList.remove('hidden');
+            try {
+                // 1. Recolección de datos
+                const url = document.getElementById('scriptUrl').value;
+                if(!url) throw new Error("No se encontró la URL del script de Google.");
 
-            const params = new URLSearchParams();
-            params.append('nombre', nombre);
-            params.append('email', email);
-            params.append('telefono', tel);
-            params.append('paqueteDeseado', selectedPkg);
-            params.append('m2_construccion', totalM2Const.toFixed(2));
-            params.append('subtotal', document.getElementById('resSubtotal').innerText);
-            params.append('iva_8', document.getElementById('resIva').innerText);
-            params.append('costo_total', document.getElementById('resCostoMXN').innerText);
-            params.append('costo_usd', document.getElementById('resCostoUSD').innerText);
-            params.append('terreno_irregular', esIrregular);
-            params.append('terreno_largo', esIrregular === 'No' ? largo : 'N/A');
-            params.append('terreno_ancho', esIrregular === 'No' ? ancho : 'N/A');
-            params.append('area_terreno', areaTerrText);
-            params.append('tipo_proyecto', tipoVal);
-            params.append('detalles', document.getElementById('detalles').value);
-            params.append('FECHA_DE_ENVIO', new Date().toLocaleString());
+                const nombre = document.getElementById('nombre').value;
+                const email = document.getElementById('email').value;
+                
+                // Concatenación segura del teléfono (Agregamos un apóstrofe para que Excel no lo lea como fórmula)
+                const lada = document.getElementById('lada').value || "";
+                const telInput = document.getElementById('telefono').value || "";
+                const tel = "'" + lada + ' ' + telInput;
 
-            fetch(url, { method: 'POST', mode: 'no-cors', body: params })
-            .then(() => {
-                showModal('¡Enviado!', 'Su solicitud ha sido registrada correctamente.', 'success');
-                document.getElementById('architectureForm').reset();
-                setTimeout(() => location.reload(), 4000);
-            })
-            .catch(() => { showModal('Error', 'Hubo un problema. Intente nuevamente.', 'error'); })
-            .finally(() => {
+                // Datos de Terreno
+                const esIrregular = document.querySelector('input[name="terrenoIrregular"]:checked').value;
+                const largo = document.getElementById('tLargo').value;
+                const ancho = document.getElementById('tAncho').value;
+                const areaTerrText = document.getElementById('tArea').innerText;
+                
+                // Tipo de Proyecto
+                const tipo = document.getElementById('tipoProyecto');
+                const tipoVal = tipo.options[tipo.selectedIndex].value;
+
+                // Costos
+                const costoUSD = document.getElementById('resCostoUSD').innerText;
+                const costoMXN = document.getElementById('resCostoMXN').innerText;
+                const subtotal = document.getElementById('resSubtotal').innerText;
+                const iva = document.getElementById('resIva').innerText;
+
+                // 2. Preparar el envío
+                showModal('Procesando...', 'Conectando con servidores de ARKONS...', 'loading');
+                document.getElementById('btnText').classList.add('hidden');
+                document.getElementById('btnSpinner').classList.remove('hidden');
+
+                const params = new URLSearchParams();
+                params.append('nombre', nombre);
+                params.append('email', email);
+                params.append('telefono', tel);
+                params.append('paqueteDeseado', selectedPkg); // Mandará 'Avanzado' automáticamente
+                params.append('m2_construccion', totalM2Const.toFixed(2));
+                params.append('subtotal', subtotal);
+                params.append('iva_8', iva);
+                params.append('costo_total', costoMXN);
+                params.append('costo_usd', costoUSD);
+                
+                // Datos del terreno
+                params.append('terreno_irregular', esIrregular);
+                params.append('terreno_largo', esIrregular === 'No' ? largo : 'N/A');
+                params.append('terreno_ancho', esIrregular === 'No' ? ancho : 'N/A');
+                params.append('area_terreno', areaTerrText);
+                
+                params.append('tipo_proyecto', tipoVal);
+                params.append('detalles', document.getElementById('detalles').value);
+                params.append('FECHA_DE_ENVIO', new Date().toLocaleString());
+
+                // 3. Enviar
+                fetch(url, { method: 'POST', mode: 'no-cors', body: params })
+                .then(() => {
+                    showModal('¡Enviado con Éxito!', 'Tu solicitud ha sido recibida. Te contactaremos pronto.', 'success');
+                    document.getElementById('architectureForm').reset();
+                    // Opcional: recargar después de unos segundos
+                    setTimeout(() => location.reload(), 5000);
+                })
+                .catch((err) => { 
+                    console.error(err);
+                    showModal('Error de Conexión', 'No se pudo conectar con Google. Por favor intenta de nuevo.', 'error'); 
+                })
+                .finally(() => {
+                    document.getElementById('btnText').classList.remove('hidden');
+                    document.getElementById('btnSpinner').classList.add('hidden');
+                });
+
+            } catch (error) {
+                // Captura errores de código
+                console.error("Error interno:", error);
+                alert("Hubo un error al recopilar los datos: " + error.message);
                 document.getElementById('btnText').classList.remove('hidden');
                 document.getElementById('btnSpinner').classList.add('hidden');
-            });
+                closeModal();
+            }
         });
     </script>
 </body>
