@@ -11,290 +11,615 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://placehold.co/1200x630/000000/ffffff?text=ARKONS+Calculadora"> 
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
         
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f7fafc;
+        :root {
+            --arkons-black: #09090b;
+            --arkons-gray: #f4f4f5;
         }
 
-        .dot-pattern {
-            background-image: radial-gradient(#ffffff 1px, transparent 1px);
-            background-size: 24px 24px;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f5;
+            color: #18181b;
+            overflow-x: hidden;
         }
-        
+
+        h1, h2, h3, h4, .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Patrón arquitectónico de fondo en el header */
+        .arch-grid {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        }
+
+        /* Transición de pasos suave */
         .step-content {
             display: none;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
         }
         .step-content.active {
             display: block;
-            animation: fadeIn 0.4s ease-out;
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .input-field {
-            @apply w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-gray-800 focus:border-gray-800 outline-none transition-all;
-        }
-
-        .card {
-            @apply bg-white p-6 shadow-2xl rounded-2xl border-t-4 border-gray-900;
-        }
-
-        /* ESTILO DE PAQUETES - RESALTADO MEJORADO */
-        .package-select {
-            @apply border-4 border-gray-900 relative overflow-hidden bg-white rounded-xl shadow-xl;
-            transform: scale(1.02);
-            z-index: 20;
+        /* Selectores Nativos 100% Clicables en la flecha */
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2309090b' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.25rem center;
+            background-size: 1.25rem;
+            padding-right: 3.5rem !important;
         }
 
-        .package-select .package-header {
-            background-color: #000000 !important;
-        }
-        
-        /* BOTONES LLAMATIVOS Y MEJORADOS */
-        .btn-primary {
-            @apply bg-black text-white font-black py-4 px-8 md:py-5 md:px-10 rounded-2xl transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.4)] hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest text-sm md:text-base ring-4 ring-transparent hover:ring-gray-200 cursor-pointer;
-        }
-        .btn-primary i {
-            @apply transition-transform duration-300;
-        }
-        /* Animaciones para los iconos del botón principal al pasar el mouse */
-        .btn-primary:hover i.fa-arrow-right, 
-        .btn-primary:hover i.fa-chevron-right, 
-        .btn-primary:hover i.fa-paper-plane {
-            transform: translateX(6px);
-        }
-        .btn-primary:hover i.fa-calculator {
-            transform: scale(1.15) rotate(5deg);
+        /* Tarjetas de Espacios (CSS Puro garantizado) */
+        .room-card {
+            position: relative;
+            background-color: #ffffff;
+            border: 2px solid #e4e4e7;
+            border-radius: 1rem;
+            padding: 1.25rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
         }
 
-        .btn-secondary {
-            @apply bg-white text-gray-500 font-bold py-4 px-6 md:py-5 md:px-8 rounded-2xl transition-all duration-300 border-2 border-gray-200 shadow-sm hover:border-gray-800 hover:text-gray-900 hover:bg-gray-50 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wider text-xs md:text-sm cursor-pointer;
-        }
-        .btn-secondary i {
-            @apply transition-transform duration-300;
-        }
-        /* Animación de regreso para el botón secundario */
-        .btn-secondary:hover i.fa-arrow-left {
-            transform: translateX(-5px);
+        .room-card.toggleable {
+            cursor: pointer;
         }
 
-        .rec-sec-input {
-            @apply !p-1 !mt-0 !w-16 text-center border-gray-400 text-sm rounded;
+        .room-card.toggleable:hover {
+            border-color: #a1a1aa;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Estado Activo / Seleccionado */
+        .room-card.active {
+            background-color: #09090b;
+            border-color: #09090b;
+            color: #ffffff;
+            box-shadow: 0 14px 28px -6px rgba(9, 9, 11, 0.28);
+            transform: translateY(-2px);
+        }
+
+        .room-card .icon-main {
+            font-size: 1.75rem;
+            margin-bottom: 0.65rem;
+            color: #71717a;
+            transition: color 0.25s ease, transform 0.25s ease;
+        }
+
+        .room-card.toggleable:hover .icon-main {
+            color: #18181b;
+            transform: scale(1.08);
+        }
+
+        .room-card.active .icon-main {
+            color: #ffffff;
+        }
+
+        .room-card .room-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            line-height: 1.2;
+            color: #18181b;
+            margin-bottom: 0.25rem;
+            transition: color 0.25s ease;
+        }
+
+        .room-card.active .room-title {
+            color: #ffffff;
+        }
+
+        .room-card .room-sqm {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #a1a1aa;
+            transition: color 0.25s ease;
+        }
+
+        .room-card.active .room-sqm {
+            color: #d4d4d8;
+        }
+
+        /* Palomita de selección en esquina superior */
+        .check-badge {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 9999px;
+            background-color: #f4f4f5;
+            border: 1.5px solid #d4d4d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .room-card.active .check-badge {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            color: #09090b;
+        }
+
+        /* Controles + / - para Recámaras Secundarias y Baños */
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f4f4f5;
+            border: 1px solid #e4e4e7;
+            border-radius: 0.6rem;
+            padding: 0.25rem;
+            width: 100%;
+            max-width: 112px;
+            margin-top: 0.65rem;
+            transition: all 0.25s ease;
+        }
+
+        .room-card.active .qty-box {
+            background-color: #18181b;
+            border-color: #3f3f46;
+        }
+
+        .qty-btn {
+            width: 1.85rem;
+            height: 1.85rem;
+            border-radius: 0.4rem;
+            background-color: #ffffff;
+            color: #18181b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        .qty-btn:hover {
+            background-color: #e4e4e7;
+        }
+
+        .qty-btn:active {
+            transform: scale(0.92);
+        }
+
+        .room-card.active .qty-btn {
+            background-color: #27272a;
+            color: #ffffff;
+        }
+
+        .room-card.active .qty-btn:hover {
+            background-color: #3f3f46;
+        }
+
+        .qty-val {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #18181b;
+            width: 1.75rem;
+            text-align: center;
+        }
+
+        .room-card.active .qty-val {
+            color: #ffffff;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col font-sans text-gray-800">
+<body class="min-h-screen flex flex-col justify-between">
 
-    <!-- Encabezado ARKONS con Logo -->
-    <header class="bg-white shadow-sm border-b border-gray-200 relative pb-12">
-        <div class="h-40 bg-gray-900 w-full relative overflow-hidden flex items-center justify-center">
-            <div class="absolute inset-0 opacity-10 dot-pattern"></div>
+    <!-- ENCABEZADO ARQUITECTÓNICO -->
+    <header class="bg-white border-b border-zinc-200 relative pb-8">
+        <div class="h-36 md:h-44 bg-zinc-950 w-full relative overflow-hidden flex items-center justify-center arch-grid">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-950/90"></div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center -mt-24">
-            <div class="inline-block relative bg-white p-2 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <img src="LOGO 2024.png" onerror="this.onerror=null;this.src='https://placehold.co/150x150/333333/ffffff?text=ARKONS';" alt="ARKONS" class="h-36 md:h-44 object-contain mx-auto scale-125">
+        <div class="max-w-4xl mx-auto px-4 relative text-center -mt-20 md:-mt-24 z-10">
+            <!-- Contenedor del Logo -->
+            <div class="inline-flex items-center justify-center bg-white p-3 rounded-3xl shadow-2xl border border-zinc-100 overflow-hidden w-36 h-36 md:w-44 md:h-44">
+                <img src="LOGO DISEÑO DIGITAL.png" onerror="this.onerror=null;this.src='https://placehold.co/300x300/ffffff/09090b?text=ARKONS&font=montserrat';" alt="ARKONS Estudio de Diseño Digital" class="w-full h-full object-contain scale-110">
             </div>
             <div class="mt-4">
-                <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight uppercase">Calculadora de Presupuesto</h1>
-                <p class="text-sm md:text-base text-gray-500 font-bold mt-1 uppercase tracking-widest">Anteproyecto Arquitectónico</p>
+                <h1 class="text-2xl md:text-3xl font-montserrat font-black text-zinc-950 tracking-tight uppercase">Calculadora de Presupuesto</h1>
+                <p class="text-xs md:text-sm text-zinc-500 font-montserrat font-bold mt-1 uppercase tracking-[0.2em]">Anteproyecto Arquitectónico</p>
             </div>
         </div>
     </header>
 
+    <!-- CONTENEDOR PRINCIPAL -->
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
         
-        <form id="architectureForm" class="card">
-            <!-- URL NUEVA DEL SCRIPT DE GOOGLE -->
+        <!-- INDICADOR DE PASOS NUMERADO -->
+        <div class="max-w-xl mx-auto mb-8">
+            <div class="flex items-center justify-between relative">
+                <!-- Línea de fondo -->
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-zinc-200 -z-10 rounded-full"></div>
+                <div id="progressBar" class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-zinc-950 -z-10 rounded-full transition-all duration-500" style="width: 0%;"></div>
+
+                <div class="flex flex-col items-center gap-1.5">
+                    <div id="stepCircle1" class="w-9 h-9 rounded-full bg-zinc-950 text-white font-montserrat font-bold text-sm flex items-center justify-center shadow-md transition-all duration-300 ring-4 ring-zinc-100">1</div>
+                    <span class="text-[10px] font-montserrat font-bold uppercase tracking-wider text-zinc-900">Espacios</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div id="stepCircle2" class="w-9 h-9 rounded-full bg-zinc-200 text-zinc-500 font-montserrat font-bold text-sm flex items-center justify-center transition-all duration-300 ring-4 ring-zinc-100">2</div>
+                    <span class="text-[10px] font-montserrat font-bold uppercase tracking-wider text-zinc-500">Terreno</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div id="stepCircle3" class="w-9 h-9 rounded-full bg-zinc-200 text-zinc-500 font-montserrat font-bold text-sm flex items-center justify-center transition-all duration-300 ring-4 ring-zinc-100">3</div>
+                    <span class="text-[10px] font-montserrat font-bold uppercase tracking-wider text-zinc-500">Inversión</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <div id="stepCircle4" class="w-9 h-9 rounded-full bg-zinc-200 text-zinc-500 font-montserrat font-bold text-sm flex items-center justify-center transition-all duration-300 ring-4 ring-zinc-100">4</div>
+                    <span class="text-[10px] font-montserrat font-bold uppercase tracking-wider text-zinc-500">Contacto</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="architectureForm" class="bg-white p-6 md:p-10 shadow-xl rounded-3xl border border-zinc-200/80 border-t-8 border-t-zinc-950">
+            <!-- CORREO OFICIAL CONFIGURADO -->
+            <input type="hidden" id="destinationEmail" value="arkonsmxli@outlook.com">
+            <!-- WHATSAPP OFICIAL CONFIGURADO -->
+            <input type="hidden" id="destinationWhatsapp" value="526861202024">
+            
+            <!-- URL DEL SCRIPT DE GOOGLE (Respaldo secundario) -->
             <input type="hidden" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbyACetMcTIzQvcAS54EQHg1iCjX_mD2DAqDEaByHLEJdB6wfTk6lNW8-aaI-fHoKAg-EA/exec">
 
             <!-- Modal de Mensajes -->
-            <div id="messageBox" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center transform transition-all scale-100">
-                    <div id="loadingIndicator" class="animate-spin rounded-full h-12 w-12 border-t-4 border-black mx-auto mb-4"></div>
-                    <p id="messageText" class="text-lg font-bold text-gray-800 mb-6"></p>
-                    <button type="button" onclick="closeModal()" id="closeMessage" class="w-full btn-primary hidden text-sm py-3">Entendido</button>
+            <div id="messageBox" class="hidden fixed inset-0 bg-zinc-950/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-zinc-100">
+                    <div id="loadingIndicator" class="animate-spin rounded-full h-12 w-12 border-4 border-zinc-200 border-t-zinc-950 mx-auto mb-5"></div>
+                    <div id="modalIcon" class="hidden text-4xl mb-4 text-zinc-950"><i class="fas fa-check-circle"></i></div>
+                    <p id="messageText" class="text-base font-montserrat font-bold text-zinc-900 mb-6"></p>
+                    
+                    <a id="whatsappActionBtn" href="#" target="_blank" class="hidden w-full mb-3 bg-emerald-600 text-white font-montserrat font-bold py-3.5 px-6 rounded-xl uppercase tracking-widest text-xs hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fab fa-whatsapp text-base"></i> Enviar copia por WhatsApp
+                    </a>
+
+                    <button type="button" onclick="closeModal()" id="closeMessage" class="w-full bg-zinc-950 text-white font-montserrat font-bold py-3.5 px-6 rounded-xl uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all cursor-pointer">Entendido</button>
                 </div>
             </div>
 
-            <!-- PASO 1: ÁREAS Y REQUERIMIENTOS -->
+            <!-- PASO 1: ESPACIOS Y TIPO -->
             <div id="step1" class="step-content active">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
-                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span> Espacios y Tipo
-                </h2>
+                <div class="flex items-center justify-between border-b border-zinc-100 pb-4 mb-6">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-montserrat font-black text-zinc-950 uppercase tracking-tight">
+                            1. Configuración del Proyecto
+                        </h2>
+                        <p class="text-xs text-zinc-500 mt-1">Selecciona el tipo de obra y las áreas que necesitas</p>
+                    </div>
+                </div>
                 
-                <div class="mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Tipo de Obra</label>
-                    <select id="tipoProyecto" class="input-field bg-white font-semibold cursor-pointer">
-                        <option value="Casa Residencial">Casa Residencial</option>
+                <!-- Selector Tipo de Obra -->
+                <div class="mb-8">
+                    <label for="tipoProyecto" class="block text-xs font-montserrat font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">Tipo de Obra</label>
+                    <select id="tipoProyecto" onchange="toggleTipoObra()" class="custom-select w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 text-zinc-900 font-montserrat font-bold text-sm md:text-base focus:border-zinc-950 focus:bg-white outline-none transition-all cursor-pointer hover:border-zinc-400">
+                        <option value="Casa Residencial Nueva">Casa Residencial Nueva</option>
                         <option value="Remodelación Mayor">Remodelación Mayor</option>
-                        <option value="Remodelación de fachada">Remodelación de fachada</option>
+                        <option value="Remodelación de Fachada">Remodelación de Fachada</option>
+                        <option value="Patios / Terrazas">Patios / Terrazas</option>
                         <option value="Local/Oficina">Local Comercial / Oficinas</option>
                     </select>
                 </div>
 
-                <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">Seleccione las Áreas:</label>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Sala</span> <input type="checkbox" name="areasSeleccionadas" value="Sala" data-sqm="15" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(15 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Comedor</span> <input type="checkbox" name="areasSeleccionadas" value="Comedor" data-sqm="12" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(12 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cocina</span> <input type="checkbox" name="areasSeleccionadas" value="Cocina" data-sqm="12" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(12 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">½ Baño</span> <input type="checkbox" name="areasSeleccionadas" value="½ Baño" data-sqm="3" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(3 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Baño Completo</span> <input type="checkbox" name="areasSeleccionadas" value="Baño Completo" data-sqm="6" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(6 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Estudio</span> <input type="checkbox" name="areasSeleccionadas" value="Estudio" data-sqm="8" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(8 m²)</span>
-                    </label>
+                <!-- SECCIÓN EXCLUSIVA: REMODELACIÓN DE FACHADA -->
+                <div id="seccionFachada" class="hidden mb-8 bg-zinc-50 rounded-2xl p-6 md:p-8 border-2 border-zinc-200">
+                    <div class="flex items-center gap-3.5 mb-6 border-b border-zinc-200 pb-4">
+                        <div class="w-12 h-12 rounded-xl bg-zinc-950 text-white flex items-center justify-center text-xl shrink-0">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-montserrat font-bold text-zinc-950 uppercase tracking-wider text-sm md:text-base">Dimensiones de la Fachada</h3>
+                            <p class="text-xs text-zinc-500 mt-0.5">Para diseño de fachada solo requerimos el frente y los niveles de tu propiedad.</p>
+                        </div>
+                    </div>
                     
-                    <!-- ÁREA: ESCALERA -->
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Escalera</span> <input type="checkbox" name="areasSeleccionadas" value="Escalera" data-sqm="6" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(2 Pisos - 6 m²)</span>
-                    </label>
-
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Terraza</span> <input type="checkbox" name="areasSeleccionadas" value="Terraza" data-sqm="18" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(18 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Alberca</span> <input type="checkbox" name="areasSeleccionadas" value="Alberca" data-sqm="25" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(25 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cochera (2)</span> <input type="checkbox" name="areasSeleccionadas" value="Cochera 2 Autos" data-sqm="36" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(36 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cochera (1)</span> <input type="checkbox" name="areasSeleccionadas" value="Cochera 1 Auto" data-sqm="18" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(18 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Lavandería</span> <input type="checkbox" name="areasSeleccionadas" value="Lavandería" data-sqm="6" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(6 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Rec. Principal</span> <input type="checkbox" name="areasSeleccionadas" value="Rec. Principal" data-sqm="26" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(Con Baño - 26 m²)</span>
-                    </label>
-                    <label class="group flex flex-col p-3 border rounded-xl cursor-pointer hover:bg-gray-50 hover:border-black transition-all">
-                        <div class="flex items-center justify-between"><span class="text-sm font-bold text-gray-700 group-hover:text-black">Cuarto TV</span> <input type="checkbox" name="areasSeleccionadas" value="Cuarto TV" data-sqm="15" onchange="updateM2()" class="accent-black w-4 h-4"></div>
-                        <span class="text-[10px] text-gray-400 mt-1 font-medium">(15 m²)</span>
-                    </label>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between hover:border-gray-400 transition-colors">
-                        <label class="flex items-center cursor-pointer w-full"><input type="checkbox" id="checkSec" onchange="toggleSec(); updateM2()" class="accent-black"><span class="ml-2 text-sm font-bold">Rec. Secundarias</span></label>
-                        <div id="secContainer" class="hidden flex items-center gap-2">
-                            <input type="number" id="numSec" value="1" min="1" class="rec-sec-input focus:ring-black" oninput="updateM2()">
-                            <span class="text-[10px] font-bold text-gray-400">x 16m²</span>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-xl border flex items-center justify-between hover:border-gray-400 transition-colors">
-                        <label class="flex items-center cursor-pointer w-full">
-                            <input type="checkbox" id="checkOtro" onchange="toggleOtro(); updateM2()" class="accent-black">
-                            <div class="ml-2 flex flex-col">
-                                <span class="text-sm font-bold">Otra</span>
-                                <span class="text-[10px] text-gray-500 font-normal">(Escriba los m²)</span>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="fachadaFrente" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Frente de la propiedad (metros)</label>
+                            <div class="relative">
+                                <input type="number" id="fachadaFrente" value="8" min="1" step="0.5" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-white text-zinc-950 font-montserrat font-black text-lg focus:border-zinc-950 outline-none transition-all" oninput="updateM2()">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400 uppercase">Metros</span>
                             </div>
-                        </label>
-                        <div id="otroContainer" class="hidden flex items-center gap-2">
-                            <input type="number" id="numOtro" value="1" min="1" class="rec-sec-input focus:ring-black" oninput="updateM2()">
-                            <span class="text-[10px] font-bold text-gray-400">m²</span>
+                        </div>
+                        <div>
+                            <label for="fachadaNiveles" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Número de Niveles</label>
+                            <select id="fachadaNiveles" class="custom-select w-full p-4 border-2 border-zinc-200 rounded-xl bg-white text-zinc-950 font-montserrat font-bold text-base focus:border-zinc-950 outline-none transition-all cursor-pointer" onchange="updateM2()">
+                                <option value="1">1 Nivel (Planta Baja)</option>
+                                <option value="2" selected>2 Niveles (Dos Plantas)</option>
+                                <option value="3">3 Niveles (Tres Plantas)</option>
+                                <option value="4">4 o más Niveles</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-gray-100 rounded-xl mb-6 flex justify-between items-center border-l-8 border-gray-900 shadow-inner">
-                    <div class="flex flex-col">
-                        <span class="font-bold text-gray-600 uppercase text-xs tracking-widest">Total Construcción:</span>
-                        <span class="text-[10px] text-gray-500 font-medium mt-1">* Incluye 10% extra por circulaciones</span>
+                <!-- SECCIÓN EXCLUSIVA: PATIOS / TERRAZAS -->
+                <div id="seccionPatio" class="hidden mb-8 bg-zinc-50 rounded-2xl p-6 md:p-8 border-2 border-zinc-200">
+                    <div class="flex items-center gap-3.5 mb-6 border-b border-zinc-200 pb-4">
+                        <div class="w-12 h-12 rounded-xl bg-zinc-950 text-white flex items-center justify-center text-xl shrink-0">
+                            <i class="fas fa-umbrella-beach"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-montserrat font-bold text-zinc-950 uppercase tracking-wider text-sm md:text-base">Dimensiones de Patio / Terraza</h3>
+                            <p class="text-xs text-zinc-500 mt-0.5">Ingresa las medidas aproximadas del espacio exterior que deseas intervenir o diseñar.</p>
+                        </div>
                     </div>
-                    <span id="totalM2" class="text-2xl font-black text-gray-900">0.00 m²</span>
+                    
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="patioAncho" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Ancho aproximado (metros)</label>
+                            <div class="relative">
+                                <input type="number" id="patioAncho" value="8" min="1" step="0.5" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-white text-zinc-950 font-montserrat font-black text-lg focus:border-zinc-950 outline-none transition-all" oninput="updateM2()">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400 uppercase">Metros</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="patioLargo" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Largo / Fondo aproximado (metros)</label>
+                            <div class="relative">
+                                <input type="number" id="patioLargo" value="6" min="1" step="0.5" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-white text-zinc-950 font-montserrat font-black text-lg focus:border-zinc-950 outline-none transition-all" oninput="updateM2()">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400 uppercase">Metros</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- SECCIÓN DE ÁREAS ARQUITECTÓNICAS -->
+                <div id="seccionAreas">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-widest">1. Selecciona las áreas de tu proyecto (Toque simple):</label>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
+                            
+                            <div id="card_sala" class="room-card toggleable" onclick="toggleRoom('sala', 15, 'Sala')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-couch icon-main"></i>
+                                <span class="room-title">Sala</span>
+                                <span class="room-sqm">15 m²</span>
+                            </div>
+
+                            <div id="card_comedor" class="room-card toggleable" onclick="toggleRoom('comedor', 12, 'Comedor')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-utensils icon-main"></i>
+                                <span class="room-title">Comedor</span>
+                                <span class="room-sqm">12 m²</span>
+                            </div>
+
+                            <div id="card_cocina" class="room-card toggleable" onclick="toggleRoom('cocina', 12, 'Cocina')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-kitchen-set icon-main"></i>
+                                <span class="room-title">Cocina</span>
+                                <span class="room-sqm">12 m²</span>
+                            </div>
+
+                            <div id="card_rec_ppal" class="room-card toggleable" onclick="toggleRoom('rec_ppal', 26, 'Recámara Principal')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-bed icon-main"></i>
+                                <span class="room-title">Rec. Principal</span>
+                                <span class="room-sqm">26 m² (c/ Baño)</span>
+                            </div>
+
+                            <div id="card_tv" class="room-card toggleable" onclick="toggleRoom('tv', 15, 'Cuarto TV')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-tv icon-main"></i>
+                                <span class="room-title">Cuarto TV</span>
+                                <span class="room-sqm">15 m²</span>
+                            </div>
+
+                            <div id="card_estudio" class="room-card toggleable" onclick="toggleRoom('estudio', 8, 'Estudio')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-laptop icon-main"></i>
+                                <span class="room-title">Estudio</span>
+                                <span class="room-sqm">8 m²</span>
+                            </div>
+
+                            <div id="card_lavanderia" class="room-card toggleable" onclick="toggleRoom('lavanderia', 6, 'Lavandería')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-soap icon-main"></i>
+                                <span class="room-title">Lavandería</span>
+                                <span class="room-sqm">6 m²</span>
+                            </div>
+
+                            <div id="card_escalera" class="room-card toggleable" onclick="toggleRoom('escalera', 6, 'Escalera')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-stairs icon-main"></i>
+                                <span class="room-title">Escalera</span>
+                                <span class="room-sqm">6 m² (2 Pisos)</span>
+                            </div>
+
+                            <div id="card_terraza" class="room-card toggleable" onclick="toggleRoom('terraza', 18, 'Terraza')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-umbrella-beach icon-main"></i>
+                                <span class="room-title">Terraza</span>
+                                <span class="room-sqm">18 m²</span>
+                            </div>
+
+                            <div id="card_alberca" class="room-card toggleable" onclick="toggleRoom('alberca', 25, 'Alberca')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-water-ladder icon-main"></i>
+                                <span class="room-title">Alberca</span>
+                                <span class="room-sqm">25 m²</span>
+                            </div>
+
+                            <div id="card_cochera1" class="room-card toggleable" onclick="toggleRoom('cochera1', 18, 'Cochera (1 Auto)')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-car icon-main"></i>
+                                <span class="room-title">Cochera (1)</span>
+                                <span class="room-sqm">18 m²</span>
+                            </div>
+
+                            <div id="card_cochera2" class="room-card toggleable" onclick="toggleRoom('cochera2', 36, 'Cochera (2 Autos)')">
+                                <div class="check-badge"><i class="fas fa-check"></i></div>
+                                <i class="fas fa-car-side icon-main"></i>
+                                <span class="room-title">Cochera (2)</span>
+                                <span class="room-sqm">36 m²</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ÁREAS DE CANTIDAD MÚLTIPLE -->
+                    <div class="mb-6 pt-2">
+                        <label class="block text-xs font-montserrat font-bold text-zinc-600 mb-3 uppercase tracking-widest">2. Recámaras Secundarias y Baños (Indica cantidad):</label>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                            
+                            <div id="card_rec_sec" class="room-card">
+                                <i class="fas fa-bed icon-main"></i>
+                                <span class="room-title">Rec. Secundarias</span>
+                                <span class="room-sqm">16 m² c/u</span>
+                                <div class="qty-box">
+                                    <button type="button" onclick="changeQty('rec_sec', -1, 10, 16, 'Recámara Secundaria')" class="qty-btn" aria-label="Disminuir"><i class="fas fa-minus"></i></button>
+                                    <span id="val_rec_sec" class="qty-val">0</span>
+                                    <button type="button" onclick="changeQty('rec_sec', 1, 10, 16, 'Recámara Secundaria')" class="qty-btn" aria-label="Aumentar"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <div id="card_bano_comp" class="room-card">
+                                <i class="fas fa-bath icon-main"></i>
+                                <span class="room-title">Baño Completo</span>
+                                <span class="room-sqm">6 m² c/u</span>
+                                <div class="qty-box">
+                                    <button type="button" onclick="changeQty('bano_comp', -1, 10, 6, 'Baño Completo')" class="qty-btn" aria-label="Disminuir"><i class="fas fa-minus"></i></button>
+                                    <span id="val_bano_comp" class="qty-val">0</span>
+                                    <button type="button" onclick="changeQty('bano_comp', 1, 10, 6, 'Baño Completo')" class="qty-btn" aria-label="Aumentar"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <div id="card_medio_bano" class="room-card">
+                                <i class="fas fa-restroom icon-main"></i>
+                                <span class="room-title">½ Baño (Visitas)</span>
+                                <span class="room-sqm">3 m² c/u</span>
+                                <div class="qty-box">
+                                    <button type="button" onclick="changeQty('medio_bano', -1, 10, 3, '½ Baño')" class="qty-btn" aria-label="Disminuir"><i class="fas fa-minus"></i></button>
+                                    <span id="val_medio_bano" class="qty-val">0</span>
+                                    <button type="button" onclick="changeQty('medio_bano', 1, 10, 3, '½ Baño')" class="qty-btn" aria-label="Aumentar"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Espacio Manual Adicional -->
+                    <div class="mb-8">
+                        <div class="p-4 border-2 border-zinc-200 rounded-2xl bg-zinc-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-zinc-400 transition-colors">
+                            <label class="flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="checkOtro" onchange="toggleOtro(); updateM2()" class="w-5 h-5 accent-zinc-950 rounded cursor-pointer">
+                                <div class="ml-3">
+                                    <span class="block text-sm font-bold text-zinc-900 font-montserrat">¿Necesitas agregar otra área personalizada?</span>
+                                    <span class="block text-xs text-zinc-500">Gimnasio, bodega, cuarto de juegos, etc.</span>
+                                </div>
+                            </label>
+                            <div id="otroContainer" class="hidden flex items-center gap-2 bg-white px-3 py-2 rounded-xl border-2 border-zinc-300 self-start sm:self-auto">
+                                <input type="number" id="numOtro" value="15" min="1" class="w-20 text-center bg-transparent outline-none font-montserrat font-black text-base text-zinc-950" oninput="updateM2()">
+                                <span class="text-xs font-bold text-zinc-500 uppercase">m² extra</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra Resumen de Metros Cuadrados -->
+                <div class="p-5 md:p-6 bg-zinc-950 rounded-2xl mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-xl">
+                    <div>
+                        <span class="font-bold text-white font-montserrat uppercase text-xs md:text-sm tracking-widest block">Superficie Estimada a Diseñar:</span>
+                        <span id="notaCirculaciones" class="text-[11px] text-zinc-400 font-medium block mt-0.5">* Incluye +10% adicional por muros y circulaciones</span>
+                    </div>
+                    <span id="totalM2" class="text-3xl md:text-4xl font-black text-white font-montserrat tracking-tight self-end sm:self-auto">0.00 m²</span>
+                </div>
+
+                <!-- Cuadro de Detalles Amplio -->
                 <div class="mb-8">
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Detalles Adicionales</label>
-                    <textarea name="detalles" id="detalles" rows="4" class="input-field w-full text-sm" placeholder="Ej. Estilo minimalista, acabados en piedra, etc."></textarea>
+                    <label for="detalles" class="block text-xs font-montserrat font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">Detalles o Requerimientos Especiales</label>
+                    <textarea name="detalles" id="detalles" rows="5" class="w-full p-4 border-2 border-zinc-200 rounded-2xl bg-zinc-50 text-zinc-900 font-medium text-sm md:text-base focus:border-zinc-950 focus:bg-white outline-none transition-all resize-y" placeholder="Platícanos más sobre tu proyecto... ¿Qué estilo te gusta (moderno, minimalista, industrial)? ¿Es de 1 o 2 plantas? ¿Alguna necesidad en especial?"></textarea>
                 </div>
 
-                <div class="flex justify-end">
-                    <button type="button" onclick="nextStep(2)" class="btn-primary">
-                        Siguiente <i class="fas fa-arrow-right"></i>
+                <div class="flex justify-end border-t border-zinc-100 pt-6">
+                    <button type="button" onclick="nextStep(2)" class="w-full sm:w-auto bg-zinc-950 text-white font-montserrat font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-zinc-800 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-sm cursor-pointer">
+                        Siguiente Paso <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- PASO 2: TERRENO Y ALCANCE -->
+            <!-- PASO 2: TERRENO -->
             <div id="step2" class="step-content">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
-                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span> Terreno
-                </h2>
+                <div class="border-b border-zinc-100 pb-4 mb-6">
+                    <h2 class="text-xl md:text-2xl font-montserrat font-black text-zinc-950 uppercase tracking-tight">
+                        2. Información del Terreno
+                    </h2>
+                    <p class="text-xs text-zinc-500 mt-1">Ingresa las medidas aproximadas de tu predio</p>
+                </div>
                 
-                <div class="mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
-                    <label class="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">¿Cómo es la forma de su terreno?</label>
-                    <div class="flex justify-center gap-4 md:gap-8">
-                        <label class="flex items-center cursor-pointer group bg-white px-4 py-2 rounded-lg border hover:border-black transition-all shadow-sm">
-                            <input type="radio" name="terrenoIrregular" value="No" checked onchange="toggleIrregularInputs('No')" class="accent-black w-4 h-4">
-                            <span class="ml-2 text-sm font-bold text-gray-600 group-hover:text-black">Regular (Rectangular)</span>
+                <div class="mb-8 bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
+                    <label class="block text-xs font-montserrat font-bold text-zinc-700 mb-4 uppercase tracking-widest text-center">¿Cómo es la forma de tu terreno?</label>
+                    <div class="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                        <label class="flex items-center justify-center p-4 bg-white rounded-xl border-2 border-zinc-200 cursor-pointer hover:border-zinc-950 transition-all shadow-sm">
+                            <input type="radio" name="terrenoIrregular" value="No" checked onchange="toggleIrregularInputs('No')" class="accent-zinc-950 w-5 h-5">
+                            <span class="ml-3 text-sm font-montserrat font-bold text-zinc-800">Regular (Rectangular)</span>
                         </label>
-                        <label class="flex items-center cursor-pointer group bg-white px-4 py-2 rounded-lg border hover:border-black transition-all shadow-sm">
-                            <input type="radio" name="terrenoIrregular" value="Sí" onchange="toggleIrregularInputs('Sí')" class="accent-black w-4 h-4">
-                            <span class="ml-2 text-sm font-bold text-gray-600 group-hover:text-black">Irregular</span>
+                        <label class="flex items-center justify-center p-4 bg-white rounded-xl border-2 border-zinc-200 cursor-pointer hover:border-zinc-950 transition-all shadow-sm">
+                            <input type="radio" name="terrenoIrregular" value="Sí" onchange="toggleIrregularInputs('Sí')" class="accent-zinc-950 w-5 h-5">
+                            <span class="ml-3 text-sm font-montserrat font-bold text-zinc-800">Irregular (Polígono)</span>
                         </label>
                     </div>
                 </div>
 
-                <div id="containerRegular" class="grid grid-cols-2 gap-6 mb-6">
+                <div id="containerRegular" class="grid grid-cols-2 gap-5 mb-8">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Largo (m)</label>
-                        <input type="number" id="tLargo" class="input-field font-bold text-lg" placeholder="0.00" oninput="calcTerreno()">
+                        <label for="tLargo" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Frente / Ancho (m)</label>
+                        <input type="number" id="tLargo" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none text-xl font-montserrat font-black text-center transition-all" placeholder="Ej. 10" oninput="calcTerreno()">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Ancho (m)</label>
-                        <input type="number" id="tAncho" class="input-field font-bold text-lg" placeholder="0.00" oninput="calcTerreno()">
+                        <label for="tAncho" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Fondo / Largo (m)</label>
+                        <input type="number" id="tAncho" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none text-xl font-montserrat font-black text-center transition-all" placeholder="Ej. 20" oninput="calcTerreno()">
                     </div>
                 </div>
 
-                <div id="containerIrregular" class="hidden mb-6">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Metros Cuadrados Totales (m²)</label>
-                    <input type="number" id="tAreaManual" class="input-field font-bold text-lg" placeholder="Ingrese el área total" oninput="calcTerreno()">
+                <div id="containerIrregular" class="hidden mb-8">
+                    <label for="tAreaManual" class="block text-xs font-montserrat font-bold text-zinc-600 uppercase tracking-wider mb-2">Área Total del Terreno (m²)</label>
+                    <input type="number" id="tAreaManual" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none text-xl font-montserrat font-black text-center transition-all" placeholder="Escribe los m² totales..." oninput="calcTerreno()">
                 </div>
 
-                <div class="p-4 bg-gray-900 text-white rounded-xl mb-8 flex justify-between items-center shadow-lg">
-                    <span class="text-xs font-bold uppercase tracking-widest opacity-70">Superficie Terreno:</span>
-                    <span id="tArea" class="font-black text-xl">0.00 m²</span>
+                <div class="p-5 bg-zinc-100 rounded-2xl mb-8 flex justify-between items-center border-l-8 border-zinc-950">
+                    <span class="text-xs font-bold uppercase tracking-widest font-montserrat text-zinc-600">Superficie del Terreno:</span>
+                    <span id="tArea" class="font-black text-2xl font-montserrat text-zinc-950">0.00 m²</span>
                 </div>
 
-                <div class="flex justify-between items-center mt-8">
-                    <button type="button" onclick="nextStep(1)" class="btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Anterior
+                <div class="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 border-t border-zinc-100 pt-6">
+                    <button type="button" onclick="nextStep(1)" class="w-full sm:w-auto bg-white text-zinc-700 font-montserrat font-bold py-4 px-6 rounded-xl border-2 border-zinc-200 hover:border-zinc-950 hover:text-zinc-950 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-xs cursor-pointer">
+                        <i class="fas fa-arrow-left"></i> Modificar Espacios
                     </button>
-                    <button type="button" onclick="prepareStep3()" class="btn-primary">
+                    <button type="button" onclick="prepareStep3()" class="w-full sm:w-auto bg-zinc-950 text-white font-montserrat font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-zinc-800 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-sm cursor-pointer">
                         Ver Presupuesto <i class="fas fa-calculator"></i>
                     </button>
                 </div>
@@ -302,126 +627,130 @@
 
             <!-- PASO 3: INVERSIÓN ESTIMADA -->
             <div id="step3" class="step-content">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
-                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span> Inversión Estimada
-                </h2>
+                <div class="border-b border-zinc-100 pb-3 mb-5">
+                    <h2 class="text-xl md:text-2xl font-montserrat font-black text-zinc-950 uppercase tracking-tight">
+                        3. Inversión Estimada
+                    </h2>
+                </div>
 
-                <div class="max-w-xl mx-auto mb-4">
-                    <!-- Avanzado (Único Paquete Especializado) -->
-                    <div id="packageAvanzado" class="package-select">
-                        <div class="package-header text-white p-4 flex flex-col items-center justify-center transition-all duration-300">
-                            <span class="font-bold uppercase tracking-widest text-lg flex items-center gap-2">Anteproyecto Arquitectónico <i class="fas fa-star text-yellow-400 text-xs"></i></span>
-                            <span class="text-3xl font-black mt-1">$130<span class="text-sm font-medium opacity-70">/m²</span></span>
+                <div class="max-w-xl mx-auto space-y-4">
+                    
+                    <div class="border-2 border-zinc-950 bg-white rounded-2xl overflow-hidden shadow-md">
+                        <div class="bg-zinc-950 text-white p-4 flex items-center justify-between">
+                            <div>
+                                <span class="font-montserrat font-black uppercase tracking-wider text-sm md:text-base block">Anteproyecto Arquitectónico</span>
+                                <span class="text-[11px] text-zinc-400">Diseño y Visualización Exterior</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl md:text-3xl font-montserrat font-black">$130</span>
+                                <span class="text-xs font-medium text-zinc-400">/m²</span>
+                            </div>
                         </div>
-                        <div class="p-5 text-sm text-gray-700 space-y-3">
-                            
-                            <ul class="space-y-2">
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Plantas Arquitectónicas (con ejes y medidas)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Fachadas Arquitectónicas (con medidas)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Cortes Arquitectónicos (con medidas)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>3 a 5 Renders de Fachada (representación en 3D)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>Recorrido Virtual Exterior (Video)</span></li>
-                                <li class="flex items-start"><i class="fas fa-check-circle text-gray-900 mt-1 mr-2 min-w-[16px]"></i><span>2 Rondas de cambios en la propuesta</span></li>
+
+                        <div class="p-4 md:p-5 text-xs md:text-sm text-zinc-800">
+                            <ul class="space-y-2 font-medium mb-4">
+                                <li class="flex items-start"><i class="fas fa-check text-zinc-950 mt-1 mr-2.5"></i><span>Plantas Arquitectónicas (con ejes y medidas)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-zinc-950 mt-1 mr-2.5"></i><span>Fachadas Arquitectónicas (con medidas)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-zinc-950 mt-1 mr-2.5"></i><span>Cortes Arquitectónicos (con medidas)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-zinc-950 mt-1 mr-2.5"></i><span>3 a 5 Renders de Fachada (representación en 3D)</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-zinc-950 mt-1 mr-2.5"></i><span>2 Rondas de cambios en la propuesta</span></li>
                             </ul>
                             
-                            <div class="mt-4 pt-3 border-t border-dashed border-gray-200 text-center">
-                                <p class="font-bold text-gray-800">Inversión Mínima: $6,500 MXN</p>
-                                <p class="text-xs text-gray-400 italic mt-1 mb-3">(Aplica para proyectos menores a 50 m²)</p>
+                            <div class="pt-3 border-t border-zinc-200 text-center space-y-2">
+                                <p id="minInvestmentText" class="font-montserrat font-bold text-zinc-950 text-xs">Inversión Mínima: $6,500 MXN <span class="font-normal text-zinc-500">(Proyectos menores a 50 m²)</span></p>
                                 
-                                <!-- AVISO DE NO INTERIORES -->
-                                <div class="bg-red-50 text-red-700 p-2 rounded-lg border border-red-200 text-xs font-bold text-center uppercase tracking-wider flex items-center justify-center gap-2">
-                                    <i class="fas fa-exclamation-circle text-lg"></i>
-                                    Renders solo de exteriores (no incluye renders interiores)
+                                <div class="bg-red-50 text-red-800 py-2 px-3 rounded-lg border border-red-200 text-[11px] font-bold uppercase tracking-wide flex items-center justify-center gap-2">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span>Renders solo de exteriores (no incluye renders interiores)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="bg-zinc-950 text-white p-5 md:p-6 rounded-2xl shadow-xl">
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-montserrat font-bold text-zinc-400 mb-3 text-center border-b border-zinc-800 pb-2">Desglose de Inversión (Incluye IVA 8%)</p>
+                        
+                        <div class="space-y-2 text-sm md:text-base border-b border-zinc-800 pb-3 mb-3">
+                            <div class="flex justify-between items-center text-zinc-300">
+                                <span class="font-medium">Construcción Total Aprox.:</span>
+                                <span id="resM2" class="font-montserrat text-white font-bold text-base md:text-lg">---</span>
+                            </div>
+                            <div class="flex justify-between items-center text-zinc-300">
+                                <span class="font-medium">Subtotal (Neto):</span>
+                                <span id="resSubtotal" class="font-montserrat text-white font-bold text-base md:text-lg">---</span>
+                            </div>
+                            <div class="flex justify-between items-center text-zinc-300">
+                                <span class="font-medium">IVA (8%):</span>
+                                <span id="resIva" class="font-montserrat text-white font-bold text-base md:text-lg">---</span>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <span class="text-[10px] font-montserrat font-bold uppercase tracking-widest text-zinc-400 block mb-0.5">Total Estimado MXN</span>
+                            <h3 id="resCostoMXN" class="text-3xl md:text-4xl font-montserrat font-black text-white tracking-tight mb-2">---</h3>
+                            
+                            <div class="inline-block bg-zinc-900 px-3.5 py-1 rounded-lg border border-zinc-700 mb-3">
+                                <p id="resCostoUSD" class="text-xs md:text-sm font-montserrat font-bold text-zinc-200 tracking-wider">---</p>
+                            </div>
+                            
+                            <div class="text-[10px] text-zinc-400 italic border-t border-zinc-800 pt-2.5 space-y-1 leading-snug">
+                                <p>* Se requiere el 50% de anticipo y el resto a contra entrega del proyecto.</p>
+                                <p class="text-zinc-500">* Este presupuesto se calculó sobre una base estimada en m² de construcción, el monto total se ajustará de acuerdo al levantamiento final.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="bg-gray-900 text-white p-5 md:p-6 rounded-2xl shadow-xl relative overflow-hidden">
-                    <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-3 text-center border-b border-gray-700 pb-2">Desglose de Inversión (Incluye IVA 8%)</p>
-                    
-                    <div class="flex justify-between items-center text-sm md:text-base text-gray-300 mb-2 border-b border-gray-700/50 pb-2">
-                        <span class="font-semibold">Construcción Total Aprox.:</span>
-                        <span id="resM2" class="font-mono text-white font-bold">---</span>
-                    </div>
-
-                    <div class="space-y-2 mb-3 border-b border-gray-700/50 pb-3">
-                        <div class="flex justify-between items-center text-sm md:text-base text-gray-300">
-                            <span class="font-semibold">Subtotal (Neto):</span>
-                            <span id="resSubtotal" class="font-mono text-white font-bold">---</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm md:text-base text-gray-300">
-                            <span class="font-semibold">IVA (8%):</span>
-                            <span id="resIva" class="font-mono text-white font-bold">---</span>
-                        </div>
-                    </div>
-
-                    <div class="text-center">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">Total Final MXN</span>
-                        <h3 id="resCostoMXN" class="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">---</h3>
-                        
-                        <div class="inline-block bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 mb-3">
-                            <p id="resCostoUSD" class="text-sm md:text-base font-bold text-white tracking-wide">---</p>
-                        </div>
-                        
-                        <p class="text-[9px] md:text-[10px] text-gray-300 font-medium italic border-t border-gray-700 pt-2 mb-1 leading-tight">
-                            * Se requiere el 50% de anticipo y el resto en contra entrega del proyecto.
-                        </p>
-                        <p class="text-[9px] md:text-[10px] text-gray-400 font-medium italic leading-tight">
-                            * Este presupuesto se calculó sobre una base estimada en m² de construcción, el monto total se ajustará de acuerdo a los m² finales resultantes.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center mt-6">
-                    <button type="button" onclick="nextStep(2)" class="btn-secondary">
+                <div class="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-6 border-t border-zinc-100 pt-5">
+                    <button type="button" onclick="nextStep(2)" class="w-full sm:w-auto bg-white text-zinc-700 font-montserrat font-bold py-4 px-6 rounded-xl border-2 border-zinc-200 hover:border-zinc-950 hover:text-zinc-950 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-xs cursor-pointer">
                         <i class="fas fa-arrow-left"></i> Modificar
                     </button>
-                    <button type="button" onclick="nextStep(4)" class="btn-primary">
-                        Contactar <i class="fas fa-chevron-right"></i>
+                    <button type="button" onclick="nextStep(4)" class="w-full sm:w-auto bg-zinc-950 text-white font-montserrat font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-zinc-800 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-sm cursor-pointer">
+                        Agendar / Contactar <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </div>
 
             <!-- PASO 4: CONTACTO -->
             <div id="step4" class="step-content">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-gray-100 pb-3 uppercase tracking-tighter flex items-center gap-2">
-                    <span class="bg-black text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span> Finalizar
-                </h2>
+                <div class="border-b border-zinc-100 pb-4 mb-6">
+                    <h2 class="text-xl md:text-2xl font-montserrat font-black text-zinc-950 uppercase tracking-tight">
+                        4. Enviar Solicitud a ARKONS
+                    </h2>
+                    <p class="text-xs text-zinc-500 mt-1">Déjanos tus datos para revisar tu anteproyecto y ponernos en contacto</p>
+                </div>
                 
-                <div class="space-y-6 mb-8">
+                <div class="space-y-5 mb-8">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">Nombre Completo</label>
-                        <input type="text" id="nombre" class="input-field bg-gray-50" placeholder="Escriba su nombre..." required>
+                        <label for="nombre" class="block text-xs font-montserrat font-bold text-zinc-600 mb-2 uppercase tracking-widest">Nombre Completo</label>
+                        <input type="text" id="nombre" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none font-medium text-sm transition-all" placeholder="Escribe tu nombre y apellido..." required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">Correo Electrónico</label>
-                        <input type="email" id="email" class="input-field bg-gray-50" placeholder="correo@ejemplo.com" required>
+                        <label for="email" class="block text-xs font-montserrat font-bold text-zinc-600 mb-2 uppercase tracking-widest">Correo Electrónico</label>
+                        <input type="email" id="email" class="w-full p-4 border-2 border-zinc-200 rounded-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none font-medium text-sm transition-all" placeholder="correo@ejemplo.com" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-widest">WhatsApp / Teléfono</label>
+                        <label for="telefono" class="block text-xs font-montserrat font-bold text-zinc-600 mb-2 uppercase tracking-widest">WhatsApp / Teléfono</label>
                         <div class="flex">
-                            <select id="lada" class="p-3 border border-gray-300 rounded-l-lg bg-gray-50 text-gray-700 border-r-0 focus:ring-gray-800 focus:border-gray-800 outline-none w-28 text-sm font-bold">
+                            <select id="lada" class="custom-select w-36 p-4 border-2 border-zinc-200 rounded-l-xl bg-zinc-100 text-zinc-900 border-r-0 focus:border-zinc-950 outline-none font-montserrat font-bold text-sm cursor-pointer">
                                 <option value="+52">🇲🇽 +52</option>
                                 <option value="+1">🇺🇸 +1</option>
                                 <option value="+34">🇪🇸 +34</option>
                                 <option value="+57">🇨🇴 +57</option>
                                 <option value="+54">🇦🇷 +54</option>
-                                <option value="+51">🇵🇪 +51</option>
-                                <option value="+56">🇨🇱 +56</option>
                                 <option value="">🌐 Otro</option>
                             </select>
-                            <input type="tel" id="telefono" class="w-full p-3 border border-gray-300 rounded-r-lg focus:ring-gray-800 focus:border-gray-800 outline-none transition-all" placeholder="1234567890" required>
+                            <input type="tel" id="telefono" class="w-full p-4 border-2 border-zinc-200 rounded-r-xl bg-zinc-50 focus:bg-white focus:border-zinc-950 outline-none font-montserrat font-bold text-sm transition-all" placeholder="10 dígitos (Ej. 686 123 4567)" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center">
-                    <button type="button" onclick="nextStep(3)" class="btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Atrás
+                <div class="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 border-t border-zinc-100 pt-6">
+                    <button type="button" onclick="nextStep(3)" class="w-full sm:w-auto bg-white text-zinc-700 font-montserrat font-bold py-4 px-6 rounded-xl border-2 border-zinc-200 hover:border-zinc-950 hover:text-zinc-950 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-xs cursor-pointer">
+                        <i class="fas fa-arrow-left"></i> Revisar Cotización
                     </button>
-                    <button type="submit" class="btn-primary" id="finalSubmit">
+                    <button type="submit" id="finalSubmit" class="w-full sm:w-auto bg-zinc-950 text-white font-montserrat font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-zinc-800 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-sm cursor-pointer">
                         <span id="btnText">Enviar Solicitud</span> <i class="fas fa-paper-plane" id="btnIcon"></i>
                         <span id="btnSpinner" class="hidden"><i class="fas fa-circle-notch fa-spin"></i> Enviando...</span>
                     </button>
@@ -430,15 +759,98 @@
         </form>
     </main>
 
+    <footer class="text-center py-6 text-xs text-zinc-400 font-montserrat font-medium">
+        © ARKONS — Estudio de Diseño Digital
+    </footer>
+
     <script>
         let currentStep = 1;
-        let selectedPkg = 'Avanzado'; // Paquete único por defecto
         let totalM2Const = 0;
+        let objEspacios = {};
 
-        window.onload = () => { updateM2(); };
+        window.onload = function () { 
+            updateM2(); 
+            updateProgress(1);
+        };
 
-        function toggleSec() { document.getElementById('secContainer').classList.toggle('hidden', !document.getElementById('checkSec').checked); }
-        function toggleOtro() { document.getElementById('otroContainer').classList.toggle('hidden', !document.getElementById('checkOtro').checked); }
+        function updateProgress(step) {
+            const widths = { 1: '0%', 2: '33%', 3: '66%', 4: '100%' };
+            document.getElementById('progressBar').style.width = widths[step] || '0%';
+
+            for (let i = 1; i <= 4; i++) {
+                const circle = document.getElementById('stepCircle' + i);
+                if (i <= step) {
+                    circle.className = "w-9 h-9 rounded-full bg-zinc-950 text-white font-montserrat font-bold text-sm flex items-center justify-center shadow-md transition-all duration-300 ring-4 ring-zinc-100";
+                } else {
+                    circle.className = "w-9 h-9 rounded-full bg-zinc-200 text-zinc-500 font-montserrat font-bold text-sm flex items-center justify-center transition-all duration-300 ring-4 ring-zinc-100";
+                }
+            }
+        }
+
+        function toggleTipoObra() {
+            const val = document.getElementById('tipoProyecto').value;
+            const secAreas = document.getElementById('seccionAreas');
+            const secFachada = document.getElementById('seccionFachada');
+            const secPatio = document.getElementById('seccionPatio');
+            const notaCirc = document.getElementById('notaCirculaciones');
+            
+            secAreas.classList.add('hidden');
+            secFachada.classList.add('hidden');
+            secPatio.classList.add('hidden');
+
+            if (val === 'Remodelación de Fachada') {
+                secFachada.classList.remove('hidden');
+                notaCirc.innerText = "* Área estimada de intervención exterior en fachada";
+            } else if (val === 'Patios / Terrazas') {
+                secPatio.classList.remove('hidden');
+                notaCirc.innerText = "* Superficie exterior estimada a diseñar";
+            } else {
+                secAreas.classList.remove('hidden');
+                notaCirc.innerText = "* Incluye +10% adicional por muros y circulaciones";
+            }
+            updateM2();
+        }
+
+        function toggleRoom(key, sqm, name) {
+            const card = document.getElementById('card_' + key);
+            
+            if (objEspacios[key]) {
+                delete objEspacios[key];
+                card.classList.remove('active');
+            } else {
+                objEspacios[key] = { qty: 1, sqm: sqm, name: name };
+                card.classList.add('active');
+            }
+            updateM2();
+        }
+
+        function changeQty(key, delta, max, sqm, name) {
+            const card = document.getElementById('card_' + key);
+            const span = document.getElementById('val_' + key);
+            
+            let current = objEspacios[key] ? objEspacios[key].qty : 0;
+            let newVal = current + delta;
+            
+            if (newVal < 0) newVal = 0;
+            if (newVal > max) newVal = max;
+            
+            span.innerText = newVal;
+            
+            if (newVal > 0) {
+                card.classList.add('active');
+                objEspacios[key] = { qty: newVal, sqm: sqm, name: name };
+            } else {
+                card.classList.remove('active');
+                delete objEspacios[key];
+            }
+            
+            updateM2();
+        }
+
+        function toggleOtro() { 
+            const check = document.getElementById('checkOtro').checked;
+            document.getElementById('otroContainer').classList.toggle('hidden', !check); 
+        }
 
         function toggleIrregularInputs(valor) {
             const reg = document.getElementById('containerRegular');
@@ -455,13 +867,26 @@
 
         function updateM2() {
             let sum = 0;
-            document.querySelectorAll('input[name="areasSeleccionadas"]:checked').forEach(c => sum += parseFloat(c.dataset.sqm));
-            if (document.getElementById('checkSec').checked) sum += (parseInt(document.getElementById('numSec').value) || 0) * 16;
-            if (document.getElementById('checkOtro').checked) sum += (parseFloat(document.getElementById('numOtro').value) || 0);
-            
-            // Se agrega el 10% automático para circulaciones y muros
-            if (sum > 0) {
-                sum = sum * 1.10;
+            const tipoObra = document.getElementById('tipoProyecto').value;
+
+            if (tipoObra === 'Remodelación de Fachada') {
+                const frente = parseFloat(document.getElementById('fachadaFrente').value) || 0;
+                const niveles = parseInt(document.getElementById('fachadaNiveles').value) || 1;
+                sum = frente * (niveles * 3);
+            } else if (tipoObra === 'Patios / Terrazas') {
+                const ancho = parseFloat(document.getElementById('patioAncho').value) || 0;
+                const largo = parseFloat(document.getElementById('patioLargo').value) || 0;
+                sum = ancho * largo;
+            } else {
+                for (let key in objEspacios) {
+                    sum += (objEspacios[key].qty * objEspacios[key].sqm);
+                }
+                if (document.getElementById('checkOtro').checked) {
+                    sum += (parseFloat(document.getElementById('numOtro').value) || 0);
+                }
+                if (sum > 0) {
+                    sum = sum * 1.10;
+                }
             }
             
             totalM2Const = sum;
@@ -485,138 +910,220 @@
             document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + n).classList.add('active');
             currentStep = n;
-            window.scrollTo(0,0);
+            updateProgress(n);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function prepareStep3() {
             if (totalM2Const <= 0) {
-                showModal('Aviso', 'Seleccione al menos un área de construcción.', 'error');
+                showModal('Selecciona tus espacios', 'Por favor selecciona al menos un espacio o medida en el Paso 1 para calcular tu inversión.', 'error');
                 return;
             }
             document.getElementById('resM2').innerText = totalM2Const.toFixed(2) + ' m²';
-            calculateFinal(); // Se calcula directamente el paquete único
+            calculateFinal(); 
             nextStep(3);
         }
 
         function calculateFinal() {
-            const precio = 130; // Precio único del paquete Avanzado
-            let subtotal = totalM2Const * precio;
+            const precioPorM2 = 130;
+            let subtotal = totalM2Const * precioPorM2;
             
-            // Inversión Mínima de $6,500
-            if (subtotal < 6500) subtotal = 6500;
+            const tipoObra = document.getElementById('tipoProyecto').value;
+            let inversionMinima = 6500;
+            let textoMinima = "Inversión Mínima: $6,500 MXN <span class='font-normal text-zinc-500'>(Proyectos menores a 50 m²)</span>";
+
+            if (tipoObra === 'Remodelación de Fachada' || tipoObra === 'Patios / Terrazas') {
+                inversionMinima = 5850;
+                textoMinima = "Inversión Mínima: $5,850 MXN <span class='font-normal text-zinc-500'>(Proyectos menores a 45 m²)</span>";
+            }
+
+            document.getElementById('minInvestmentText').innerHTML = textoMinima;
+
+            if (subtotal < inversionMinima) subtotal = inversionMinima;
 
             const iva = subtotal * 0.08; 
             const totalMXN = subtotal + iva; 
             const totalUSD = totalMXN / 17.23; 
 
-            document.getElementById('resSubtotal').innerText = '$' + subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
-            document.getElementById('resIva').innerText = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
-            document.getElementById('resCostoMXN').innerText = '$' + totalMXN.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
+            document.getElementById('resSubtotal').innerText = '$' + subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+            document.getElementById('resIva').innerText = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+            document.getElementById('resCostoMXN').innerText = '$' + totalMXN.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
             document.getElementById('resCostoUSD').innerText = 'EQUIVALENTE A: $' + totalUSD.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' USD APROX.';
         }
 
-        function showModal(title, msg, type) {
+        function showModal(title, msg, type, whatsappUrl = null) {
             const box = document.getElementById('messageBox');
             const txt = document.getElementById('messageText');
             const loader = document.getElementById('loadingIndicator');
+            const icon = document.getElementById('modalIcon');
             const btn = document.getElementById('closeMessage');
-            txt.innerHTML = `<strong>${title}</strong><br>${msg}`;
+            const waBtn = document.getElementById('whatsappActionBtn');
+
+            txt.innerHTML = `<span class="text-xl block mb-1">${title}</span><span class="text-sm font-sans font-normal text-zinc-600 block leading-relaxed">${msg}</span>`;
             box.classList.remove('hidden');
-            if (type === 'loading') { loader.classList.remove('hidden'); btn.classList.add('hidden'); } 
-            else { loader.classList.add('hidden'); btn.classList.remove('hidden'); }
+
+            if (type === 'loading') {
+                loader.classList.remove('hidden');
+                icon.classList.add('hidden');
+                btn.classList.add('hidden');
+                waBtn.classList.add('hidden');
+            } else {
+                loader.classList.add('hidden');
+                icon.classList.remove('hidden');
+                btn.classList.remove('hidden');
+                if (whatsappUrl) {
+                    waBtn.href = whatsappUrl;
+                    waBtn.classList.remove('hidden');
+                } else {
+                    waBtn.classList.add('hidden');
+                }
+            }
         }
 
-        function closeModal() { document.getElementById('messageBox').classList.add('hidden'); }
+        function closeModal() {
+            document.getElementById('messageBox').classList.add('hidden');
+        }
 
-        // --- LÓGICA DE ENVÍO REFORZADA ---
-        document.getElementById('architectureForm').addEventListener('submit', function(e) {
+        document.getElementById('architectureForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             try {
-                // 1. Recolección de datos
-                const url = document.getElementById('scriptUrl').value;
-                if(!url) throw new Error("No se encontró la URL del script de Google.");
+                const emailDestino = document.getElementById('destinationEmail').value.trim();
+                const whatsappDestino = document.getElementById('destinationWhatsapp').value.trim();
+                const scriptUrl = document.getElementById('scriptUrl').value;
 
                 const nombre = document.getElementById('nombre').value;
                 const email = document.getElementById('email').value;
-                
-                // Concatenación segura del teléfono (Agregamos un apóstrofe para que Excel no lo lea como fórmula)
                 const lada = document.getElementById('lada').value || "";
                 const telInput = document.getElementById('telefono').value || "";
-                const tel = "'" + lada + ' ' + telInput;
+                const telLimpio = lada + ' ' + telInput;
+                const telExcel = "'" + telLimpio;
 
-                // Datos de Terreno
                 const esIrregular = document.querySelector('input[name="terrenoIrregular"]:checked').value;
-                const largo = document.getElementById('tLargo').value;
-                const ancho = document.getElementById('tAncho').value;
+                const largo = document.getElementById('tLargo').value || 'N/A';
+                const ancho = document.getElementById('tAncho').value || 'N/A';
                 const areaTerrText = document.getElementById('tArea').innerText;
+                const tipoObra = document.getElementById('tipoProyecto').value;
                 
-                // Tipo de Proyecto
-                const tipo = document.getElementById('tipoProyecto');
-                const tipoVal = tipo.options[tipo.selectedIndex].value;
+                let listaCuartos = [];
+                if (tipoObra === 'Remodelación de Fachada') {
+                    const f = document.getElementById('fachadaFrente').value;
+                    const n = document.getElementById('fachadaNiveles').value;
+                    listaCuartos.push(`Fachada: Frente ${f}m x ${n} Nivel(es)`);
+                } else if (tipoObra === 'Patios / Terrazas') {
+                    const pa = document.getElementById('patioAncho').value;
+                    const pl = document.getElementById('patioLargo').value;
+                    listaCuartos.push(`Patio / Terraza: ${pa}m de ancho x ${pl}m de largo (${totalM2Const.toFixed(2)} m²)`);
+                } else {
+                    for (let key in objEspacios) {
+                        listaCuartos.push(`${objEspacios[key].qty}x ${objEspacios[key].name}`);
+                    }
+                    if (document.getElementById('checkOtro').checked) {
+                        listaCuartos.push(`Área Extra: ${document.getElementById('numOtro').value} m²`);
+                    }
+                }
+                
+                const detallesCliente = document.getElementById('detalles').value || 'Sin comentarios adicionales';
+                const espaciosTexto = listaCuartos.join(", ");
+                const detallesCompletos = `${detallesCliente}\n\n-- ESPACIOS COTIZADOS --\n${espaciosTexto}`;
 
-                // Costos
                 const costoUSD = document.getElementById('resCostoUSD').innerText;
                 const costoMXN = document.getElementById('resCostoMXN').innerText;
                 const subtotal = document.getElementById('resSubtotal').innerText;
                 const iva = document.getElementById('resIva').innerText;
+                const fechaEnvio = new Date().toLocaleString('es-MX');
 
-                // 2. Preparar el envío
-                showModal('Procesando...', 'Conectando con servidores de ARKONS...', 'loading');
+                const mensajeWA = encodeURIComponent(
+                    `Hola ARKONS, acabo de cotizar mi proyecto en la calculadora:\n\n` +
+                    `*Nombre:* ${nombre}\n` +
+                    `*Tipo de Obra:* ${tipoObra}\n` +
+                    `*Superficie a Diseñar:* ${totalM2Const.toFixed(2)} m²\n` +
+                    `*Espacios:* ${espaciosTexto}\n` +
+                    `*Terreno:* ${areaTerrText} (${esIrregular === 'No' ? largo + 'x' + ancho + 'm' : 'Irregular'})\n` +
+                    `*Inversión Estimada:* ${costoMXN}\n` +
+                    `*Comentarios:* ${detallesCliente}`
+                );
+                const whatsappLink = `https://wa.me/${whatsappDestino.replace(/[^0-9]/g, '')}?text=${mensajeWA}`;
+
+                showModal('Procesando Solicitud', 'Enviando tu cotización a ARKONS...', 'loading');
                 document.getElementById('btnText').classList.add('hidden');
                 document.getElementById('btnIcon').classList.add('hidden');
                 document.getElementById('btnSpinner').classList.remove('hidden');
 
-                const params = new URLSearchParams();
-                params.append('nombre', nombre);
-                params.append('email', email);
-                params.append('telefono', tel);
-                params.append('paqueteDeseado', selectedPkg); // Mandará 'Avanzado' automáticamente
-                params.append('m2_construccion', totalM2Const.toFixed(2));
-                params.append('subtotal', subtotal);
-                params.append('iva_8', iva);
-                params.append('costo_total', costoMXN);
-                params.append('costo_usd', costoUSD);
-                
-                // Datos del terreno
-                params.append('terreno_irregular', esIrregular);
-                params.append('terreno_largo', esIrregular === 'No' ? largo : 'N/A');
-                params.append('terreno_ancho', esIrregular === 'No' ? ancho : 'N/A');
-                params.append('area_terreno', areaTerrText);
-                
-                params.append('tipo_proyecto', tipoVal);
-                params.append('detalles', document.getElementById('detalles').value);
-                params.append('FECHA_DE_ENVIO', new Date().toLocaleString());
+                const formData = new FormData();
+                formData.append("_subject", `Nueva Cotización ARKONS: ${nombre} (${tipoObra})`);
+                formData.append("_template", "table");
+                formData.append("_captcha", "false");
+                formData.append("Fecha", fechaEnvio);
+                formData.append("Cliente", nombre);
+                formData.append("Correo_Cliente", email);
+                formData.append("Telefono_WhatsApp", telLimpio);
+                formData.append("Tipo_de_Proyecto", tipoObra);
+                formData.append("M2_A_Disenar", totalM2Const.toFixed(2) + " m²");
+                formData.append("Espacios_Seleccionados", espaciosTexto);
+                formData.append("Superficie_Terreno", areaTerrText);
+                formData.append("Medidas_Terreno", esIrregular === 'No' ? `${largo}m x ${ancho}m` : 'Terreno Irregular');
+                formData.append("Subtotal_Neto", subtotal);
+                formData.append("IVA_8", iva);
+                formData.append("Total_MXN", costoMXN);
+                formData.append("Total_USD_Aprox", costoUSD);
+                formData.append("Detalles_Adicionales", detallesCliente);
 
-                // 3. Enviar
-                fetch(url, { method: 'POST', mode: 'no-cors', body: params })
-                .then(() => {
-                    showModal('¡Enviado con Éxito!', 'Tu solicitud ha sido recibida. Te contactaremos pronto.', 'success');
-                    document.getElementById('architectureForm').reset();
-                    // Opcional: recargar después de unos segundos
-                    setTimeout(() => location.reload(), 5000);
-                })
-                .catch((err) => { 
-                    console.error(err);
-                    showModal('Error de Conexión', 'No se pudo conectar con Google. Por favor intenta de nuevo.', 'error'); 
-                })
-                .finally(() => {
-                    document.getElementById('btnText').classList.remove('hidden');
-                    document.getElementById('btnIcon').classList.remove('hidden');
-                    document.getElementById('btnSpinner').classList.add('hidden');
-                });
+                const promesas = [];
+
+                if (emailDestino) {
+                    promesas.push(
+                        fetch(`https://formsubmit.co/ajax/${emailDestino}`, {
+                            method: "POST",
+                            headers: { 'Accept': 'application/json' },
+                            body: formData
+                        })
+                    );
+                }
+
+                if (scriptUrl) {
+                    const params = new URLSearchParams();
+                    params.append('nombre', nombre);
+                    params.append('email', email);
+                    params.append('telefono', telExcel);
+                    params.append('paqueteDeseado', 'Anteproyecto Arquitectónico'); 
+                    params.append('m2_construccion', totalM2Const.toFixed(2));
+                    params.append('subtotal', subtotal);
+                    params.append('iva_8', iva);
+                    params.append('costo_total', costoMXN);
+                    params.append('costo_usd', costoUSD);
+                    params.append('terreno_irregular', esIrregular);
+                    params.append('terreno_largo', esIrregular === 'No' ? largo : 'N/A');
+                    params.append('terreno_ancho', esIrregular === 'No' ? ancho : 'N/A');
+                    params.append('area_terreno', areaTerrText);
+                    params.append('tipo_proyecto', tipoObra);
+                    params.append('detalles', detallesCompletos);
+                    params.append('FECHA_DE_ENVIO', fechaEnvio);
+
+                    promesas.push(fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: params }));
+                }
+
+                await Promise.allSettled(promesas);
+
+                showModal(
+                    '¡Solicitud Enviada!', 
+                    'Hemos recibido la información de tu proyecto por correo. Si deseas atención inmediata, también puedes enviarnos tu resumen por WhatsApp:', 
+                    'success',
+                    whatsappLink
+                );
+                
+                document.getElementById('architectureForm').reset();
+                objEspacios = {};
 
             } catch (error) {
-                // Captura errores de código
-                console.error("Error interno:", error);
-                alert("Hubo un error al recopilar los datos: " + error.message);
+                console.error("Error:", error);
+                showModal('Aviso', 'Ocurrió un detalle al procesar los datos: ' + error.message, 'error');
+            } finally {
                 document.getElementById('btnText').classList.remove('hidden');
-                if(document.getElementById('btnIcon')) document.getElementById('btnIcon').classList.remove('hidden');
+                document.getElementById('btnIcon').classList.remove('hidden');
                 document.getElementById('btnSpinner').classList.add('hidden');
-                closeModal();
             }
         });
     </script>
 </body>
 </html>
-```
